@@ -7,4 +7,4 @@ You instanticate a SDManager class and point one end of it it at a local bundle 
 
 But it'll really just delete your important data.  It's a work in progress.
 
-Check out the SyncDAV example application for how it works, or the tests in the jstests folder.
+Check out the SyncDAV example application for how it works, or the tests in the jstests folder.  Note: The SyncDAV app doesn't give very good info on what's going on, so check the NSLog output.  Syncing is also only manual at this point.

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		CC1B243C139AC87400FC89F4 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = CC1B243B139AC87400FC89F4 /* README.md */; };
 		CC48D851138D988F00275154 /* FMFileDAVRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CC48D84C138D988F00275154 /* FMFileDAVRequest.m */; };
 		CC48D852138D988F00275154 /* FMWebDAVRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CC48D84E138D988F00275154 /* FMWebDAVRequest.m */; };
 		CC48D853138D988F00275154 /* ISO8601DateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = CC48D850138D988F00275154 /* ISO8601DateFormatter.m */; };
@@ -54,6 +55,7 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		8D1107320486CEB800E47090 /* SyncDAV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SyncDAV.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC1B243B139AC87400FC89F4 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		CC48D84B138D988F00275154 /* FMFileDAVRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMFileDAVRequest.h; path = src/fmwebdav/FMFileDAVRequest.h; sourceTree = "<group>"; };
 		CC48D84C138D988F00275154 /* FMFileDAVRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMFileDAVRequest.m; path = src/fmwebdav/FMFileDAVRequest.m; sourceTree = "<group>"; };
 		CC48D84D138D988F00275154 /* FMWebDAVRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMWebDAVRequest.h; path = src/fmwebdav/FMWebDAVRequest.h; sourceTree = "<group>"; };
@@ -185,6 +187,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				CC1B243B139AC87400FC89F4 /* README.md */,
 				CCA314AF13907AFD00BB8F16 /* images */,
 				CC48D863138D98C100275154 /* Info.plist */,
 				CC48D85D138D98BB00275154 /* InfoPlist.strings */,
@@ -304,6 +307,7 @@
 				CC48D862138D98BB00275154 /* MainMenu.xib in Resources */,
 				CCA314B113907B0800BB8F16 /* SyncDAVFolderIcon.icns in Resources */,
 				CCA3163C1390A24000BB8F16 /* SyncDAVIcon.icns in Resources */,
+				CC1B243C139AC87400FC89F4 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
