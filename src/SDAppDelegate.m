@@ -47,9 +47,6 @@
     }
     
     if (![FMPrefs objectForKey:@"remoteURL"]) {
-        debug(@"heyyyyyy");
-        
-        
         
         NSString *uname = [FMPrefs objectForKey:@"iToolsMember"];
         if (uname) {
