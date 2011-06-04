@@ -1,0 +1,127 @@
+var sd = NSApp;
+var inSyncDAV = ("com.flyingmeat.SyncDAV" == [[NSBundle mainBundle] bundleIdentifier]);
+
+if (!inSyncDAV) {
+    sd = [JSTalk application:"SyncDAV"];
+}
+
+var SDRemoteUseMobileMe = SDRemoteUseMobileMe || false;
+var SDScriptPath        = [jstalk env].scriptURL.path();
+var SDScriptName        = [SDScriptPath lastPathComponent];
+var SDScriptFolder      = [SDScriptPath stringByDeletingLastPathComponent];
+var SDUserName          = "gus";
+var SDPassword          = "password";
+var SDLocalURL          = [NSURL fileURLWithPath:"/private/tmp/sdtest/"];
+var SDRemoteURL         = [NSURL URLWithString:"http://localhost/testwebdav/ServerSyncDAV/"];
+
+
+var SDOnConflictDiscardLocal  = 0;
+var SDOnConflictDiscardServer = 1;
+var SDOnConflictRenameLocal   = 2;
+var SDOnConflictRenameSever   = 3;
+var SDOnConflictAskDelegate   = 4;
+
+
+
+if (SDRemoteUseMobileMe) {
+    var df = [NSUserDefaults standardUserDefaults];
+    SDUserName = [df objectForKey:@"iToolsMember"];
+    SDPassword = null; // let the keychain handle it.
+    SDRemoteURL = [NSURL URLWithString:"http://idisk.me.com/" + SDUserName + "/SyncDAV/sdtest/"];
+    
+    if (inSyncDAV) {
+        var k = [FMKeychainItem keychainItemWithService:@"iTools" forAccount:SDUserName];
+        SDPassword = [k genericPassword];
+    }
+    
+    print("Using MobileMe")
+}
+
+[[jstalk jsController] system:"rm -rf " + [SDLocalURL path]];
+[[jstalk jsController] system:"mkdir -p " + [SDLocalURL path]];
+
+if (inSyncDAV) {
+    
+    var firstRequestThatNeedsPassword = [FMWebDAVRequest requestToURL:SDRemoteURL];
+    
+    [firstRequestThatNeedsPassword setUsername:SDUserName]
+    [firstRequestThatNeedsPassword setPassword:SDPassword]
+    [[firstRequestThatNeedsPassword rlsynchronous] remove];
+    
+    
+    [[[FMWebDAVRequest requestToURL:SDRemoteURL] rlsynchronous] createDirectory];
+}
+
+function SDAssert(val, msg) {
+    if (!val) {
+        print("failure for " + SDScriptPath + "\n" + msg);
+        [sd activate];
+        [sd displayDialog:"Failure for " + SDScriptPath + "!" withTitle:msg];
+        [[jstalk jsController] system:"open " + SDScriptPath];
+        return false;
+    }
+    return true;
+}
+
+function runInSD(f) {
+    
+    if (inSyncDAV) {
+        if (f) {
+            f();
+        }
+        else {
+            main();
+        }
+    }
+    else { // If not, then tell Acorn to run this guy.
+        [[JSTalk application:"SyncDAV"] doJavaScript:[jstalk env].scriptURL.path()];
+    }
+}
+
+
+function SDPutTextToURL(text, url) {
+    
+    var data = [text dataUsingEncoding:NSUTF8StringEncoding];
+    var dr = [[[FMWebDAVRequest requestToURL:url] synchronous] putData:data];
+    
+    return dr;
+}
+
+function SDMakeDirAtURL(url) {
+    [[[FMWebDAVRequest requestToURL:url] synchronous] createDirectory];
+}
+
+function SDGetTextFromURL(url) {
+    
+    var f = [[[FMWebDAVRequest requestToURL:url] synchronous] get];
+    
+    return [f responseString];
+}
+
+function SDResourceExistsAtURL(url) {
+    var r = [[[FMWebDAVRequest requestToURL:url] synchronous] get];
+    return [r responseStatusCode] == 200;
+}
+
+
+function SDWriteTextToLocalFile(text, filePath) {
+    
+    var p = [SDLocalURL path] + "/" + filePath;
+    var data = [text dataUsingEncoding:NSUTF8StringEncoding];
+    
+    [data writeToFile:p atomically:true];
+}
+
+function SDGetLocalFileText(filePath) {
+    
+    var p = [SDLocalURL path] + "/" + filePath;
+    
+    var s = [NSString stringWithContentsOfFile:p encoding:NSUTF8StringEncoding error:null];
+    
+    return s;
+}
+
+function SDSystem(cmd) {
+    [[jstalk jsController] system:cmd];
+}
+

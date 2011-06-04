@@ -1,0 +1,15 @@
+//
+// Prefix header for all source files of the 'flysync' target in the 'flysync' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif
+
+#define debug NSLog
+
+#define SDAssert assert
+
+#define FMRelease(var) { [var release]; var = 0x00; } 
+
+#define FMPrefs [NSUserDefaults standardUserDefaults]

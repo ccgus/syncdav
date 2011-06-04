@@ -1,0 +1,31 @@
+[jstalk include:"sdsetup.jstalk"];
+
+runInSD(function() {
+    
+    var m = [[SDManager managerWithLocalURL:SDLocalURL remoteURL:SDRemoteURL username:SDUserName password:SDPassword] retain];
+    [m setAuthenticated:true];
+        
+    // put a text file up on the server to work with.
+    var startText = @"This will be deleted."
+    var textURL = [SDRemoteURL URLByAppendingPathComponent:@"hello.txt"];
+    SDPutTextToURL(startText, textURL);
+    
+    
+    [m syncWithFinishBlock:[NSApplication new1ArgBlockForJSFunction:function(err) {
+        
+        // see if we got it.
+        var s = SDGetLocalFileText("hello.txt")
+        SDAssert([startText isEqualTo:s], "Text was not updated- got '" + s + "'")
+        
+        // now remove directly from the server.
+        [[[FMWebDAVRequest requestToURL:textURL] synchronous] remove];
+        SDAssert(!SDResourceExistsAtURL(textURL), "The file should have been deleted from the server!"); // sanity check
+        
+        // sync, and see if it's gone locally.
+        [m syncWithFinishBlock:[NSApplication new1ArgBlockForJSFunction:function(err) {
+            SDAssert(SDGetLocalFileText("hello.txt") == null, "The file should have been deleted locally.")
+            print("Done with " + SDScriptName)
+        }]];
+    }]];
+});
+

@@ -1,0 +1,43 @@
+//SDRemoteUseMobileMe = true;
+
+[jstalk include:"sdsetup.jstalk"];
+
+runInSD(function() {
+    
+    var m = [[SDManager managerWithLocalURL:SDLocalURL remoteURL:SDRemoteURL username:SDUserName password:SDPassword] retain];
+    [m setAuthenticated:true];
+    [m setConflictBehavior:SDOnConflictDiscardLocal];
+    
+    // put a text file up on the server
+    var startText = @"Con job"
+    var textURL = [SDRemoteURL URLByAppendingPathComponent:@"cj.txt"];
+    SDPutTextToURL(startText, textURL);
+    
+    [m syncWithFinishBlock:[NSApplication new1ArgBlockForJSFunction:function(err) {
+        
+        // see if we got it.
+        var s = SDGetLocalFileText("cj.txt")
+        SDAssert([startText isEqualTo:s], "Text was not updated- got '" + s + "'")
+        
+        // change the text on the server
+        var serverText = @"server updated text"
+        SDPutTextToURL(serverText, textURL);
+        
+        // change the text locally.
+        var newText = @"locally updated text";
+        SDWriteTextToLocalFile(newText, "cj.txt")
+        
+        [m syncWithFinishBlock:[NSApplication new1ArgBlockForJSFunction:function(err) {
+            
+            var sText = SDGetTextFromURL(textURL);
+            SDAssert([sText isEqualTo:serverText], "Text was not updated! got:\n'" + sText + "'")
+            
+            var lText = SDGetLocalFileText("cj.txt")
+            SDAssert([lText isEqualTo:serverText], "Local was not updated- got '" + s + "'")
+            
+            print("Done with " + SDScriptName);
+        }]];
+    
+    }]];
+});
+

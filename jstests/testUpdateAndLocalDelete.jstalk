@@ -1,0 +1,43 @@
+//SDRemoteUseMobileMe = true;
+
+[jstalk include:"sdsetup.jstalk"];
+
+runInSD(function() {
+    
+    var m = [[SDManager managerWithLocalURL:SDLocalURL remoteURL:SDRemoteURL username:SDUserName password:SDPassword] retain];
+    [m setAuthenticated:true];
+    
+    // put a text file up on the server
+    var startText = @"Hello World!"
+    var textURL = [SDRemoteURL URLByAppendingPathComponent:@"hello.txt"];
+    SDPutTextToURL(startText, textURL);
+    
+    [m syncWithFinishBlock:[NSApplication new1ArgBlockForJSFunction:function(err) {
+        
+        // see if we got it.
+        var s = SDGetLocalFileText("hello.txt")
+        SDAssert([startText isEqualTo:s], "Text was not updated- got '" + s + "'")
+        
+        // change the text.
+        var newText = @"Hello World - with more text!";
+        SDWriteTextToLocalFile(newText, "hello.txt")
+        
+        [m syncWithFinishBlock:[NSApplication new1ArgBlockForJSFunction:function(err) {
+            
+            // get it off the server, make sure it's awesome.
+            var sText = SDGetTextFromURL(textURL);
+            SDAssert([sText isEqualTo:newText], "Text was not updated! got:\n'" + sText + "'")
+            
+            // delete it locally.
+            SDSystem("rm -rf " + [SDLocalURL path] + "/hello.txt")
+            
+            [m syncWithFinishBlock:[NSApplication new1ArgBlockForJSFunction:function(err) {
+                // make sure it isn't on the server anymore.
+                SDAssert(!SDResourceExistsAtURL(textURL), "The text should be deleted from the server! '" + sText + "'")
+                print("Done with " + SDScriptName);
+            }]];
+        }]];
+    
+    }]];
+});
+

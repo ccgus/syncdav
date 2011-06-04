@@ -1,0 +1,449 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		CC48D851138D988F00275154 /* FMFileDAVRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CC48D84C138D988F00275154 /* FMFileDAVRequest.m */; };
+		CC48D852138D988F00275154 /* FMWebDAVRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = CC48D84E138D988F00275154 /* FMWebDAVRequest.m */; };
+		CC48D853138D988F00275154 /* ISO8601DateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = CC48D850138D988F00275154 /* ISO8601DateFormatter.m */; };
+		CC48D858138D989800275154 /* SDAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CC48D855138D989800275154 /* SDAppDelegate.m */; };
+		CC48D85C138D98AC00275154 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CC48D85A138D98AC00275154 /* main.m */; };
+		CC48D861138D98BB00275154 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CC48D85D138D98BB00275154 /* InfoPlist.strings */; };
+		CC48D862138D98BB00275154 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = CC48D85F138D98BB00275154 /* MainMenu.xib */; };
+		CC48D875138D993900275154 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = CC48D870138D993900275154 /* FMDatabase.m */; };
+		CC48D876138D993900275154 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = CC48D872138D993900275154 /* FMDatabaseAdditions.m */; };
+		CC48D877138D993900275154 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = CC48D874138D993900275154 /* FMResultSet.m */; };
+		CC48D87B138D9BB300275154 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CC48D87A138D9BB300275154 /* libsqlite3.dylib */; };
+		CC48D94E138DC09A00275154 /* FMNSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = CC48D94D138DC09A00275154 /* FMNSStringAdditions.m */; };
+		CC48DA52138DE1E600275154 /* SDUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = CC48DA51138DE1E600275154 /* SDUtils.m */; };
+		CC5B6864138C9EA700E21363 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5B6862138C9EA700E21363 /* Security.framework */; };
+		CC5B6865138C9EA700E21363 /* SecurityInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5B6863138C9EA700E21363 /* SecurityInterface.framework */; };
+		CC6CCF26138ECE9E00ED45DC /* JSTalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC6CCF25138ECE9E00ED45DC /* JSTalk.framework */; };
+		CC6CCF2B138ECEB200ED45DC /* JSTalk.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CC6CCF25138ECE9E00ED45DC /* JSTalk.framework */; };
+		CC6CCFC6138ECEE700ED45DC /* SDApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6CCFC5138ECEE700ED45DC /* SDApplication.m */; };
+		CC6CD0BF138EDD3F00ED45DC /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC6CD0BE138EDD3F00ED45DC /* JavaScriptCore.framework */; };
+		CC6CD1A8138F235100ED45DC /* FMKeychainItem.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6CD1A7138F235100ED45DC /* FMKeychainItem.m */; };
+		CC77B85C1395CE6F004AAAA7 /* SDManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CC48D857138D989800275154 /* SDManager.m */; };
+		CCA314B113907B0800BB8F16 /* SyncDAVFolderIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = CCA314B013907B0800BB8F16 /* SyncDAVFolderIcon.icns */; };
+		CCA3163C1390A24000BB8F16 /* SyncDAVIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = CCA3163B1390A24000BB8F16 /* SyncDAVIcon.icns */; };
+		CCFC5F8F13918CD10026096B /* SDQueueItem.m in Sources */ = {isa = PBXBuildFile; fileRef = CCFC5F8E13918CD10026096B /* SDQueueItem.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		CC6CCFC3138ECED000ED45DC /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				CC6CCF2B138ECEB200ED45DC /* JSTalk.framework in Copy Frameworks */,
+			);
+			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		8D1107320486CEB800E47090 /* SyncDAV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SyncDAV.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC48D84B138D988F00275154 /* FMFileDAVRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMFileDAVRequest.h; path = src/fmwebdav/FMFileDAVRequest.h; sourceTree = "<group>"; };
+		CC48D84C138D988F00275154 /* FMFileDAVRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMFileDAVRequest.m; path = src/fmwebdav/FMFileDAVRequest.m; sourceTree = "<group>"; };
+		CC48D84D138D988F00275154 /* FMWebDAVRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMWebDAVRequest.h; path = src/fmwebdav/FMWebDAVRequest.h; sourceTree = "<group>"; };
+		CC48D84E138D988F00275154 /* FMWebDAVRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMWebDAVRequest.m; path = src/fmwebdav/FMWebDAVRequest.m; sourceTree = "<group>"; };
+		CC48D84F138D988F00275154 /* ISO8601DateFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ISO8601DateFormatter.h; path = src/fmwebdav/ISO8601DateFormatter.h; sourceTree = "<group>"; };
+		CC48D850138D988F00275154 /* ISO8601DateFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ISO8601DateFormatter.m; path = src/fmwebdav/ISO8601DateFormatter.m; sourceTree = "<group>"; };
+		CC48D854138D989800275154 /* SDAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDAppDelegate.h; path = src/SDAppDelegate.h; sourceTree = "<group>"; };
+		CC48D855138D989800275154 /* SDAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDAppDelegate.m; path = src/SDAppDelegate.m; sourceTree = "<group>"; };
+		CC48D856138D989800275154 /* SDManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDManager.h; path = src/SDManager.h; sourceTree = "<group>"; };
+		CC48D857138D989800275154 /* SDManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDManager.m; path = src/SDManager.m; sourceTree = "<group>"; };
+		CC48D85A138D98AC00275154 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = src/main.m; sourceTree = "<group>"; };
+		CC48D85B138D98AC00275154 /* SDPrefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDPrefix.pch; path = src/SDPrefix.pch; sourceTree = "<group>"; };
+		CC48D85E138D98BB00275154 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = res/English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		CC48D860138D98BB00275154 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = res/English.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		CC48D863138D98C100275154 /* Info.plist */ = {isa = PBXFileReference; explicitFileType = text.xml; fileEncoding = 4; name = Info.plist; path = res/Info.plist; sourceTree = "<group>"; };
+		CC48D86F138D993900275154 /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabase.h; path = src/fmdb/FMDatabase.h; sourceTree = "<group>"; };
+		CC48D870138D993900275154 /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabase.m; path = src/fmdb/FMDatabase.m; sourceTree = "<group>"; };
+		CC48D871138D993900275154 /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabaseAdditions.h; path = src/fmdb/FMDatabaseAdditions.h; sourceTree = "<group>"; };
+		CC48D872138D993900275154 /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabaseAdditions.m; path = src/fmdb/FMDatabaseAdditions.m; sourceTree = "<group>"; };
+		CC48D873138D993900275154 /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMResultSet.h; path = src/fmdb/FMResultSet.h; sourceTree = "<group>"; };
+		CC48D874138D993900275154 /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMResultSet.m; path = src/fmdb/FMResultSet.m; sourceTree = "<group>"; };
+		CC48D87A138D9BB300275154 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		CC48D94C138DC09A00275154 /* FMNSStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMNSStringAdditions.h; path = src/fm/FMNSStringAdditions.h; sourceTree = "<group>"; };
+		CC48D94D138DC09A00275154 /* FMNSStringAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMNSStringAdditions.m; path = src/fm/FMNSStringAdditions.m; sourceTree = "<group>"; };
+		CC48DA50138DE1E600275154 /* SDUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDUtils.h; path = src/SDUtils.h; sourceTree = "<group>"; };
+		CC48DA51138DE1E600275154 /* SDUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDUtils.m; path = src/SDUtils.m; sourceTree = "<group>"; };
+		CC5B6862138C9EA700E21363 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
+		CC5B6863138C9EA700E21363 /* SecurityInterface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SecurityInterface.framework; path = /System/Library/Frameworks/SecurityInterface.framework; sourceTree = "<absolute>"; };
+		CC6CCF25138ECE9E00ED45DC /* JSTalk.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JSTalk.framework; path = lib/JSTalk.framework; sourceTree = "<group>"; };
+		CC6CCFC4138ECEE700ED45DC /* SDApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDApplication.h; path = src/SDApplication.h; sourceTree = "<group>"; };
+		CC6CCFC5138ECEE700ED45DC /* SDApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDApplication.m; path = src/SDApplication.m; sourceTree = "<group>"; };
+		CC6CD0BE138EDD3F00ED45DC /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		CC6CD1A6138F235100ED45DC /* FMKeychainItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMKeychainItem.h; path = src/fm/FMKeychainItem.h; sourceTree = "<group>"; };
+		CC6CD1A7138F235100ED45DC /* FMKeychainItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMKeychainItem.m; path = src/fm/FMKeychainItem.m; sourceTree = "<group>"; };
+		CCA314B013907B0800BB8F16 /* SyncDAVFolderIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = SyncDAVFolderIcon.icns; path = res/images/SyncDAVFolderIcon.icns; sourceTree = "<group>"; };
+		CCA3163B1390A24000BB8F16 /* SyncDAVIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = SyncDAVIcon.icns; path = res/images/SyncDAVIcon.icns; sourceTree = "<group>"; };
+		CCFC5F8D13918CD10026096B /* SDQueueItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDQueueItem.h; path = src/SDQueueItem.h; sourceTree = "<group>"; };
+		CCFC5F8E13918CD10026096B /* SDQueueItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDQueueItem.m; path = src/SDQueueItem.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D11072E0486CEB800E47090 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				CC5B6864138C9EA700E21363 /* Security.framework in Frameworks */,
+				CC5B6865138C9EA700E21363 /* SecurityInterface.framework in Frameworks */,
+				CC48D87B138D9BB300275154 /* libsqlite3.dylib in Frameworks */,
+				CC6CCF26138ECE9E00ED45DC /* JSTalk.framework in Frameworks */,
+				CC6CD0BF138EDD3F00ED45DC /* JavaScriptCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		080E96DDFE201D6D7F000001 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				CC6CCFC4138ECEE700ED45DC /* SDApplication.h */,
+				CC6CCFC5138ECEE700ED45DC /* SDApplication.m */,
+				CC48D854138D989800275154 /* SDAppDelegate.h */,
+				CC48D855138D989800275154 /* SDAppDelegate.m */,
+				CC48DA50138DE1E600275154 /* SDUtils.h */,
+				CC48DA51138DE1E600275154 /* SDUtils.m */,
+				CC48D856138D989800275154 /* SDManager.h */,
+				CC48D857138D989800275154 /* SDManager.m */,
+				CCFC5F8D13918CD10026096B /* SDQueueItem.h */,
+				CCFC5F8E13918CD10026096B /* SDQueueItem.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CC6CD0BE138EDD3F00ED45DC /* JavaScriptCore.framework */,
+				CC5B6862138C9EA700E21363 /* Security.framework */,
+				CC5B6863138C9EA700E21363 /* SecurityInterface.framework */,
+				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+				CC48D87A138D9BB300275154 /* libsqlite3.dylib */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
+				13E42FB307B3F0F600E4EEF1 /* CoreData.framework */,
+				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107320486CEB800E47090 /* SyncDAV.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* flysync */ = {
+			isa = PBXGroup;
+			children = (
+				CC48D948138DC08B00275154 /* fm */,
+				CC48D86E138D990E00275154 /* db */,
+				CC5B685C138C9E8200E21363 /* WebDAV */,
+				080E96DDFE201D6D7F000001 /* Classes */,
+				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = flysync;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				CC48D85A138D98AC00275154 /* main.m */,
+				CC48D85B138D98AC00275154 /* SDPrefix.pch */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CCA314AF13907AFD00BB8F16 /* images */,
+				CC48D863138D98C100275154 /* Info.plist */,
+				CC48D85D138D98BB00275154 /* InfoPlist.strings */,
+				CC48D85F138D98BB00275154 /* MainMenu.xib */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CC6CCF25138ECE9E00ED45DC /* JSTalk.framework */,
+				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
+				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CC48D86E138D990E00275154 /* db */ = {
+			isa = PBXGroup;
+			children = (
+				CC48D86F138D993900275154 /* FMDatabase.h */,
+				CC48D870138D993900275154 /* FMDatabase.m */,
+				CC48D871138D993900275154 /* FMDatabaseAdditions.h */,
+				CC48D872138D993900275154 /* FMDatabaseAdditions.m */,
+				CC48D873138D993900275154 /* FMResultSet.h */,
+				CC48D874138D993900275154 /* FMResultSet.m */,
+			);
+			name = db;
+			sourceTree = "<group>";
+		};
+		CC48D948138DC08B00275154 /* fm */ = {
+			isa = PBXGroup;
+			children = (
+				CC6CD1A6138F235100ED45DC /* FMKeychainItem.h */,
+				CC6CD1A7138F235100ED45DC /* FMKeychainItem.m */,
+				CC48D94C138DC09A00275154 /* FMNSStringAdditions.h */,
+				CC48D94D138DC09A00275154 /* FMNSStringAdditions.m */,
+			);
+			name = fm;
+			sourceTree = "<group>";
+		};
+		CC5B685C138C9E8200E21363 /* WebDAV */ = {
+			isa = PBXGroup;
+			children = (
+				CC48D84B138D988F00275154 /* FMFileDAVRequest.h */,
+				CC48D84C138D988F00275154 /* FMFileDAVRequest.m */,
+				CC48D84D138D988F00275154 /* FMWebDAVRequest.h */,
+				CC48D84E138D988F00275154 /* FMWebDAVRequest.m */,
+				CC48D84F138D988F00275154 /* ISO8601DateFormatter.h */,
+				CC48D850138D988F00275154 /* ISO8601DateFormatter.m */,
+			);
+			name = WebDAV;
+			sourceTree = "<group>";
+		};
+		CCA314AF13907AFD00BB8F16 /* images */ = {
+			isa = PBXGroup;
+			children = (
+				CCA3163B1390A24000BB8F16 /* SyncDAVIcon.icns */,
+				CCA314B013907B0800BB8F16 /* SyncDAVFolderIcon.icns */,
+			);
+			name = images;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D1107260486CEB800E47090 /* Syncdav */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "Syncdav" */;
+			buildPhases = (
+				8D1107290486CEB800E47090 /* Resources */,
+				8D11072C0486CEB800E47090 /* Sources */,
+				8D11072E0486CEB800E47090 /* Frameworks */,
+				CC6CCFC3138ECED000ED45DC /* Copy Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Syncdav;
+			productInstallPath = "$(HOME)/Applications";
+			productName = flysync;
+			productReference = 8D1107320486CEB800E47090 /* SyncDAV.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "syncdav" */;
+			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 29B97314FDCFA39411CA2CEA /* flysync */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D1107260486CEB800E47090 /* Syncdav */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D1107290486CEB800E47090 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC48D861138D98BB00275154 /* InfoPlist.strings in Resources */,
+				CC48D862138D98BB00275154 /* MainMenu.xib in Resources */,
+				CCA314B113907B0800BB8F16 /* SyncDAVFolderIcon.icns in Resources */,
+				CCA3163C1390A24000BB8F16 /* SyncDAVIcon.icns in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D11072C0486CEB800E47090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC48D851138D988F00275154 /* FMFileDAVRequest.m in Sources */,
+				CC48D852138D988F00275154 /* FMWebDAVRequest.m in Sources */,
+				CC48D853138D988F00275154 /* ISO8601DateFormatter.m in Sources */,
+				CC48D858138D989800275154 /* SDAppDelegate.m in Sources */,
+				CC48D85C138D98AC00275154 /* main.m in Sources */,
+				CC48D875138D993900275154 /* FMDatabase.m in Sources */,
+				CC48D876138D993900275154 /* FMDatabaseAdditions.m in Sources */,
+				CC48D877138D993900275154 /* FMResultSet.m in Sources */,
+				CC48D94E138DC09A00275154 /* FMNSStringAdditions.m in Sources */,
+				CC48DA52138DE1E600275154 /* SDUtils.m in Sources */,
+				CC6CCFC6138ECEE700ED45DC /* SDApplication.m in Sources */,
+				CC6CD1A8138F235100ED45DC /* FMKeychainItem.m in Sources */,
+				CCFC5F8F13918CD10026096B /* SDQueueItem.m in Sources */,
+				CC77B85C1395CE6F004AAAA7 /* SDManager.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		CC48D85D138D98BB00275154 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CC48D85E138D98BB00275154 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		CC48D85F138D98BB00275154 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CC48D860138D98BB00275154 /* English */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		C01FCF4B08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application: Flying Meat Inc.";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/lib\"",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = src/SDPrefix.pch;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				INFOPLIST_FILE = res/Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_NAME = SyncDAV;
+			};
+			name = Debug;
+		};
+		C01FCF4C08A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application: Flying Meat Inc.";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/lib\"",
+				);
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = src/SDPrefix.pch;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				INFOPLIST_FILE = res/Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_NAME = SyncDAV;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "Syncdav" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4B08A954540054247B /* Debug */,
+				C01FCF4C08A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "syncdav" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}
