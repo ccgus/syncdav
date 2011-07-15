@@ -80,6 +80,31 @@
     }
 }
 
+- (void)stopPollingTimer {
+    
+}
+
+- (void)startPollingTimer {
+    
+    if (_pollingTimer) {
+        [_pollingTimer invalidate];
+        [_pollingTimer release];
+    }
+    
+    NSTimeInterval seconds = [FMPrefs floatForKey:@"pollTime"];
+    
+    if (seconds < 1) {
+        // we've got it set to manual in this case.
+        return;
+    }
+    
+    _pollingTimer = [[NSTimer scheduledTimerWithTimeInterval:seconds * 60 target:self selector:@selector(pollingTimerHit:) userInfo:nil repeats:YES] retain];
+}
+
+- (void)pollingTimerHit:(NSTimer*)aNiceTimerToIgnore {
+    [self syncAction:nil];
+}
+
 - (void)startSyncManager {
     
     NSURL *localURL  = [localPathControl URL];
@@ -141,6 +166,7 @@
         if ([_manager authenticated]) {
             [_manager start];
             [syncButton setTitle:@"Sync"];
+            [self startPollingTimer];
         }
         else {
             NSBeep();

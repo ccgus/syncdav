@@ -23,6 +23,8 @@
     IBOutlet NSButton *syncButton;
     IBOutlet NSProgressIndicator *progressSpinner;
     
+    NSTimer *_pollingTimer;
+    
 }
 
 @property (assign) IBOutlet NSWindow *window;
