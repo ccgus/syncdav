@@ -43,6 +43,7 @@ typedef NSUInteger SDConflictOptions;
     
     NSString            *_username;
     NSString            *_password;
+    NSString            *_encryptPhrase;
     
     FSEventStreamRef    _eventsStreamRef;
     
@@ -75,6 +76,8 @@ typedef NSUInteger SDConflictOptions;
 @property (retain) NSMutableArray *downloadQue;
 @property (assign) BOOL authenticated;
 @property (assign) NSUInteger conflictBehavior;
+@property (retain) NSString *encryptPhrase;
+
 
 
 + (id)managerWithLocalURL:(NSURL*)localU remoteURL:(NSURL*)remoteU username:(NSString *)uname password:(NSString*)pass;

@@ -4,7 +4,10 @@
 
 #ifdef __OBJC__
     #import <Cocoa/Cocoa.h>
+    #import "FMAESDataAdditions.h"
 #endif
+
+
 
 #define debug NSLog
 

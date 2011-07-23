@@ -12,6 +12,7 @@
 @implementation SDQueueItem
 @synthesize url=_url;
 @synthesize localDataPUTURL=_localDataPUTURL;
+@synthesize encryptPhrase=_encryptPhrase;
 
 
 + (id)queueItemWithURL:(NSURL*)u action:(SEL)a finishBlock:(void (^)(FMWebDAVRequest *))block {
@@ -72,6 +73,11 @@
             return NO;
         }
         else {
+            
+            if (_encryptPhrase) {
+                data = [data AESEncryptWithKey:_encryptPhrase];
+            }
+            
             [[[FMWebDAVRequest requestToURL:_url delegate:delegate] putData:data] withFinishBlock:_finishBlock];
         }
     }

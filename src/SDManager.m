@@ -35,6 +35,8 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
 @synthesize downloadQue=_downloadQue;
 @synthesize authenticated=_authenticated;
 @synthesize conflictBehavior=_conflictBehavior;
+@synthesize encryptPhrase=_encryptPhrase;
+
 
 + (id)managerWithLocalURL:(NSURL*)localU remoteURL:(NSURL*)remoteU username:(NSString *)uname password:(NSString*)pass {
     
@@ -52,7 +54,7 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
     return me;
 }
 
-- (id) init {
+- (id)init {
 	self = [super init];
 	if (self != nil) {
 		_waitingQueue = [[NSMutableArray array] retain];
@@ -74,6 +76,7 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
     FMRelease(_currentSyncUUID);
     FMRelease(_waitingQueue);
     FMRelease(_activeQueue);
+    FMRelease(_encryptPhrase);
     //FMRelease(_downloadQueBlockHolder);
     
     [super dealloc];
@@ -121,6 +124,7 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
     SDAssert([NSThread isMainThread]);
     
     SDQueueItem *item = [SDQueueItem queueItemWithURL:url putLocalDataURL:lurl finishBlock:block];
+    [item setEncryptPhrase:_encryptPhrase];
     
     [_waitingQueue addObject:item];
     
@@ -396,6 +400,8 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
 
 - (void)getServerURLIfNeeded:(NSURL*)itemServerURL withPathInfo:(NSDictionary*)pathInfo{
     
+    debug(@"itemServerURL: '%@'", itemServerURL);
+    
     NSString *etag      = [SDUtils makeStrongEtag:[pathInfo objectForKey:FMWebDAVETagKey]];
     NSString *uri       = [[pathInfo objectForKey:FMWebDAVURIKey] fmStringByReplacingPercentEscapes];
     NSURL *lurl         = [self localPathURLFromServerURI:uri];
@@ -406,15 +412,24 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
     BOOL shouldDownload = ![[NSFileManager defaultManager] fileExistsAtPath:[lurl path] isDirectory:&isDir];
     BOOL alreadyExists  = NO;
     
+    debug(@"1 shouldDownload: '%d'", shouldDownload);
+    
     if (!shouldDownload) {
         // Check the etag to see if it's changed at all.
         // Don't use stringForQuery:, because MobileMe dirs don't have etags and it'll return a nil value otherwise.
         
+        debug(@"checking…");
+        
+        // /enc.txt|file|"50519-10-4a8b1a42e0600"|b10a8db164e0754105b7a99be72e3fe5||1311380823.0|1311380823.67838|Sat, 23 Jul 2011 00:27:04 GMT|1|8e6ac38a-ef9e-4d80-b4e0-aa31191c5006|
+        debug(@"relPath: '%@'", relPath);
         FMResultSet *rs = [[self catalog] executeQuery:@"select etag from sync_catalog where path = ?", relPath];
         while ([rs next]) {
             NSString *localEtag = [rs stringForColumnIndex:0];
             shouldDownload = ![localEtag isEqualToString:etag];
             alreadyExists  = YES;
+            
+            debug(@"etag: '%@'", etag);
+            debug(@"localEtag: '%@'", localEtag);
             
             if (isDir && alreadyExists) {
                 shouldDownload = NO;
@@ -424,7 +439,12 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
                 debug(@"Different etags- scheduling %@ for download s: %@ vs l: %@", relPath, etag, localEtag);
             }
         }
+        
+        debug(@"done checking");
     }
+    
+    
+    debug(@"2 shouldDownload: '%d'", shouldDownload);
     
     if (shouldDownload) {
         
@@ -486,8 +506,18 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
                 
                 [self addURLToRequestQueue:itemServerURL requestAction:@selector(get) withFinishBlock:^(FMWebDAVRequest *getRequest) {
                     
+                    NSData *writeData = [getRequest responseData];
+                    
+                    if (_encryptPhrase) {
+                        writeData = [writeData AESDecryptWithKey:_encryptPhrase];
+                        if (!writeData) {
+                            NSLog(@"Whooa- I think the password given to decrypt the data is wrong.");
+                            #pragma message "FIXME: Fixme- make a delegate message to say HEY BAD PASSWORD"
+                        }
+                    }
+                    
                     NSError *err = 0x00;
-                    if (![[getRequest responseData] writeToURL:lurl options:NSDataWritingAtomic error:&err]) {
+                    if (![writeData writeToURL:lurl options:NSDataWritingAtomic error:&err]) {
                         debug(@"err: %p", err);
                         NSLog(@"Error: %@", err);
                         NSLog(@"Could not write to %@", lurl);
@@ -498,7 +528,7 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
                     }
                     else {
                         
-                        NSString *md5        = [SDUtils md5ForData:[getRequest responseData]];
+                        NSString *md5        = [SDUtils md5ForData:writeData];
                         
                         NSError *err;
                         NSDictionary *atts   = [[NSFileManager defaultManager] attributesOfItemAtPath:[lurl path] error:&err];
@@ -652,7 +682,6 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
         
         
         NSURL *localPushURL = [dict objectForKey:@"url"];
-        BOOL exists         = [[dict objectForKey:@"exists"] boolValue];
         BOOL isDir          = [[dict objectForKey:@"isDir"] boolValue];
         //NSString *lastEtag  = [dict objectForKey:@"lastEtag"];
         
@@ -727,14 +756,21 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
                     
                     SDAssert(headEtag);
                     
+                    BOOL worked = [[self catalog] executeUpdate:@"replace into sync_catalog (path, etag, md5_when_put, sync_check_uuid, server_modified_date_string, weak_etag) values (?, ?, ?, ?, ?, ?)", relativePath, headEtag, localMD5, headDate, [NSNumber numberWithBool:headWeakEtag], _currentSyncUUID];
+                    
+                    SDAssert(worked);
+                    /*
                     if (exists) {
-                        [[self catalog] executeUpdate:@"update sync_catalog set etag = ?, md5_when_put = ?, sync_check_uuid = ?, server_modified_date_string = ?, weak_etag = ? where path = ?", headEtag, localMD5, _currentSyncUUID, headDate, [NSNumber numberWithBool:headWeakEtag], relativePath];
+                        BOOL res = [[self catalog] executeUpdate:@"update sync_catalog set etag = ?, md5_when_put = ?, sync_check_uuid = ?, server_modified_date_string = ?, weak_etag = ? where path = ?", headEtag, localMD5, _currentSyncUUID, headDate, [NSNumber numberWithBool:headWeakEtag], relativePath];
                         
+                        SDAssert(res);
                         SDAssert(![[self catalog] hadError]);
                     }
                     else {
-                        [[self catalog] executeUpdate:@"insert into sync_catalog (path, etag, md5_when_put, sync_check_uuid, server_modified_date_string, weak_etag) values (?, ?, ?, ?, ?, ?)", relativePath, headEtag, localMD5, headDate, [NSNumber numberWithBool:headWeakEtag], _currentSyncUUID];
+                        BOOL res = [[self catalog] executeUpdate:@"insert into sync_catalog (path, etag, md5_when_put, sync_check_uuid, server_modified_date_string, weak_etag) values (?, ?, ?, ?, ?, ?)", relativePath, headEtag, localMD5, headDate, [NSNumber numberWithBool:headWeakEtag], _currentSyncUUID];
+                        SDAssert(res);
                     }
+                    */
                 }
                 else {
                     NSLog(@"Bad head on %@", pushToURL);
@@ -803,7 +839,7 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
         endpointURL = _remoteURL;
     }
     
-    //debug(@"entering getServerChangesAtURL for %@", endpointURL);
+    debug(@"entering getServerChangesAtURL for %@", endpointURL);
     
     [self addURLToRequestQueue:endpointURL requestAction:@selector(fetchDirectoryListing) withFinishBlock:^(FMWebDAVRequest *dirRequest) {
         
@@ -847,6 +883,8 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
         
         for (NSDictionary *d in deletes) {
             
+            debug(@"deletes: '%@'", deletes);
+            
             NSString *path = [d objectForKey:@"path"];
             NSString *type = [d objectForKey:@"file_type"];
             
@@ -856,7 +894,7 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
                 
                 NSURL *rURL = [self serverURLFromRelativePath:path];
                 
-                if ([type isEqualToString:@"fold"] && ![[rURL absoluteString] hasSuffix:@"/"]) {
+                if ([type isEqualTo:@"fold"] && ![[rURL absoluteString] hasSuffix:@"/"]) {
                     rURL = [NSURL URLWithString:[[rURL absoluteString] stringByAppendingString:@"/"]];
                 }
                 

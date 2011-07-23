@@ -79,10 +79,19 @@ function runInSD(f) {
 }
 
 
-function SDPutTextToURL(text, url) {
+function SDPutTextToURL(text, url, passphrase) {
     
     var data = [text dataUsingEncoding:NSUTF8StringEncoding];
+    
+    if (passphrase) {
+        print("Encrypting with " + passphrase + " " + data)
+        data = [data AESEncryptWithKey:passphrase];
+    }
+    
+    
     var dr = [[[FMWebDAVRequest requestToURL:url] synchronous] putData:data];
+    
+    print(data)
     
     return dr;
 }

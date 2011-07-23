@@ -1,0 +1,36 @@
+//SDRemoteUseMobileMe = true;
+
+[jstalk include:"sdsetup.jstalk"];
+
+runInSD(function() {
+    
+    var m = [[SDManager managerWithLocalURL:SDLocalURL remoteURL:SDRemoteURL username:SDUserName password:SDPassword] retain];
+    [m setAuthenticated:true];
+    [m setEncryptPhrase:"foo"];
+    
+    var startText = @"Hello World"
+    SDWriteTextToLocalFile(startText, "enc.txt");
+    
+    [m syncWithFinishBlock:[NSApplication new1ArgBlockForJSFunction:function(err) {
+        
+        var textURL    = [SDRemoteURL URLByAppendingPathComponent:@"enc.txt"];
+        print(textURL)
+        var serverText = @"server updated text"
+        
+        var req = SDPutTextToURL(serverText, textURL, "foo");
+        
+        [m syncWithFinishBlock:[NSApplication new1ArgBlockForJSFunction:function(err) {
+            
+            var lText = SDGetLocalFileText("enc.txt")
+            
+            SDAssert(lText, "lText was null!")
+            SDAssert([lText isEqualTo:serverText], "Local wasn't what it was supposed to be! got '" + lText + "'")
+          
+            print("Done with " + SDScriptName);
+            
+        }]];
+    }]];
+});
+
+
+

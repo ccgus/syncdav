@@ -14,10 +14,12 @@
     NSURL *_localDataPUTURL;
     SEL    _requestAction;
     void (^_finishBlock)(FMWebDAVRequest *);
+    NSString *_encryptPhrase;
 }
 
 @property (retain) NSURL *url;
 @property (retain) NSURL *localDataPUTURL;
+@property (retain) NSString *encryptPhrase;
 
 + (id)queueItemWithURL:(NSURL*)u action:(SEL)a finishBlock:(void (^)(FMWebDAVRequest *))block;
 + (id)queueItemWithURL:(NSURL*)u putLocalDataURL:(NSURL*)putLocalDataURL finishBlock:(void (^)(FMWebDAVRequest *))block;

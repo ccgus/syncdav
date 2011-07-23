@@ -32,6 +32,7 @@
 		CC77B85C1395CE6F004AAAA7 /* SDManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CC48D857138D989800275154 /* SDManager.m */; };
 		CCA314B113907B0800BB8F16 /* SyncDAVFolderIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = CCA314B013907B0800BB8F16 /* SyncDAVFolderIcon.icns */; };
 		CCA3163C1390A24000BB8F16 /* SyncDAVIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = CCA3163B1390A24000BB8F16 /* SyncDAVIcon.icns */; };
+		CCD8BDB113DA419100A75E39 /* FMAESDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = CCD8BDB013DA419100A75E39 /* FMAESDataAdditions.m */; };
 		CCFC5F8F13918CD10026096B /* SDQueueItem.m in Sources */ = {isa = PBXBuildFile; fileRef = CCFC5F8E13918CD10026096B /* SDQueueItem.m */; };
 /* End PBXBuildFile section */
 
@@ -92,6 +93,8 @@
 		CC6CD1A7138F235100ED45DC /* FMKeychainItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMKeychainItem.m; path = src/fm/FMKeychainItem.m; sourceTree = "<group>"; };
 		CCA314B013907B0800BB8F16 /* SyncDAVFolderIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = SyncDAVFolderIcon.icns; path = res/images/SyncDAVFolderIcon.icns; sourceTree = "<group>"; };
 		CCA3163B1390A24000BB8F16 /* SyncDAVIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = SyncDAVIcon.icns; path = res/images/SyncDAVIcon.icns; sourceTree = "<group>"; };
+		CCD8BDAF13DA419100A75E39 /* FMAESDataAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMAESDataAdditions.h; path = src/fm/FMAESDataAdditions.h; sourceTree = "<group>"; };
+		CCD8BDB013DA419100A75E39 /* FMAESDataAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMAESDataAdditions.m; path = src/fm/FMAESDataAdditions.m; sourceTree = "<group>"; };
 		CCFC5F8D13918CD10026096B /* SDQueueItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDQueueItem.h; path = src/SDQueueItem.h; sourceTree = "<group>"; };
 		CCFC5F8E13918CD10026096B /* SDQueueItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDQueueItem.m; path = src/SDQueueItem.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -222,6 +225,8 @@
 		CC48D948138DC08B00275154 /* fm */ = {
 			isa = PBXGroup;
 			children = (
+				CCD8BDAF13DA419100A75E39 /* FMAESDataAdditions.h */,
+				CCD8BDB013DA419100A75E39 /* FMAESDataAdditions.m */,
 				CC6CD1A6138F235100ED45DC /* FMKeychainItem.h */,
 				CC6CD1A7138F235100ED45DC /* FMKeychainItem.m */,
 				CC48D94C138DC09A00275154 /* FMNSStringAdditions.h */,
@@ -332,6 +337,7 @@
 				CC6CD1A8138F235100ED45DC /* FMKeychainItem.m in Sources */,
 				CCFC5F8F13918CD10026096B /* SDQueueItem.m in Sources */,
 				CC77B85C1395CE6F004AAAA7 /* SDManager.m in Sources */,
+				CCD8BDB113DA419100A75E39 /* FMAESDataAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
