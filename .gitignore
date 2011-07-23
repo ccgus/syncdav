@@ -4,3 +4,5 @@ syncdav.xcodeproj/project.xcworkspace/contents.xcworkspacedata
 syncdav.xcodeproj/project.xcworkspace/xcuserdata/gus.xcuserdatad/UserInterfaceState.xcuserstate
 syncdav.xcodeproj/xcuserdata/gus.xcuserdatad/xcschemes/Syncdav.xcscheme
 syncdav.xcodeproj/xcuserdata/gus.xcuserdatad/xcschemes/xcschememanagement.plist
+.DS_Store
+src/.DS_Store
