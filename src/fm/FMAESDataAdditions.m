@@ -15,7 +15,7 @@
     [passKey getCString:keyBuffer maxLength:sizeof(keyBuffer) encoding:NSUTF8StringEncoding];
     
     size_t numBytesEncrypted = 0;
-    #pragma message "FIXME: I think these values might be a bit off.  Shouldn't it be kCCKeySizeAES128?"
+    // Yes, we're using kCCKeySizeAES256 here, instead of kCCKeySizeAES128.
     size_t returnLength      = ([self length] + kCCKeySizeAES256) & ~(kCCKeySizeAES256 - 1);
     char   *returnBuffer     = malloc(returnLength * sizeof(uint8_t));
     
