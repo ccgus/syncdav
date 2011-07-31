@@ -17,8 +17,11 @@
     IBOutlet NSTextField *userTextField;
     IBOutlet NSTextField *passTextField;
     IBOutlet NSTextField *urlTextField;
+    IBOutlet NSTextField *encryptionPhraseTextField;
+    IBOutlet NSTextField *reflectorURLTextField;
     IBOutlet NSPathControl *localPathControl;
     IBOutlet NSTextField *statusTextField;
+    
     
     IBOutlet NSButton *syncButton;
     IBOutlet NSProgressIndicator *progressSpinner;

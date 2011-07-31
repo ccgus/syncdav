@@ -8,6 +8,9 @@
 
 #import "SDAppDelegate.h"
 #import "FMKeychainItem.h"
+#import "FMNSStringAdditions.h"
+
+NSString *SDEncytionPhraseKeychainName = @"%@ SyncDAV Encryption Phrase";
 
 @interface SDAppDelegate ()
 - (void)startSyncManager;
@@ -44,6 +47,17 @@
         if (pass) {
             [passTextField setStringValue:pass];
         }
+        
+        
+        NSString *phraseURL = [NSString stringWithFormat:SDEncytionPhraseKeychainName, [FMPrefs objectForKey:@"remoteURL"]];
+        
+        
+        k = [FMKeychainItem keychainItemWithService:phraseURL forAccount:[FMPrefs objectForKey:@"username"]];
+        
+        if ((pass = [k genericPassword])) {
+            [encryptionPhraseTextField setStringValue:pass];
+        }
+        
     }
     
     if (![FMPrefs objectForKey:@"remoteURL"]) {
@@ -144,6 +158,30 @@
     if (!pass) {
         [window makeFirstResponder:passTextField];
         return;
+    }
+    
+    
+    NSString *phraseURL = [NSString stringWithFormat:SDEncytionPhraseKeychainName, [FMPrefs objectForKey:@"remoteURL"]];
+    FMKeychainItem *phraseKeychain = [FMKeychainItem keychainItemWithService:phraseURL forAccount:[FMPrefs objectForKey:@"username"]];
+    
+    NSString *encPhrase = [phraseKeychain genericPassword];
+    
+    debug(@"[encryptionPhraseTextField stringValue]: '%@'", [encryptionPhraseTextField stringValue]);
+    
+    if (!encPhrase && [[[encryptionPhraseTextField stringValue] trim] length]) {
+        debug(@"Adding %@ to the keychain", encPhrase);
+        [phraseKeychain addGenericPassword:[encryptionPhraseTextField stringValue]];
+    }
+    
+    
+    if (![pass isEqualTo:[passTextField stringValue]]) {
+#pragma message "FIXME: cleanup password changes!"
+        SDAssert(NO); // gus, fix this case. (password change)
+    }
+    
+    if (encPhrase && ![encPhrase isEqualTo:[encryptionPhraseTextField stringValue]]) {
+        #pragma message "FIXME: cleanup password changes!"
+        SDAssert(NO); // gus, fix this case. (password change)
     }
     
     [self makeLocalSyncFolderAtPath:[localURL path]];
