@@ -1,8 +1,5 @@
-syncdav.xcodeproj/gus.mode1v3
-syncdav.xcodeproj/gus.pbxuser
-syncdav.xcodeproj/project.xcworkspace/contents.xcworkspacedata
-syncdav.xcodeproj/project.xcworkspace/xcuserdata/gus.xcuserdatad/UserInterfaceState.xcuserstate
-syncdav.xcodeproj/xcuserdata/gus.xcuserdatad/xcschemes/Syncdav.xcscheme
-syncdav.xcodeproj/xcuserdata/gus.xcuserdatad/xcschemes/xcschememanagement.plist
+gus.mode1v3
+gus.pbxuser
+contents.xcworkspacedata
+UserInterfaceState.xcuserstate
 .DS_Store
-src/.DS_Store
