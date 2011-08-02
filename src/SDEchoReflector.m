@@ -74,13 +74,11 @@
             NSString *s = [reader stringFromReadData];
             _authenticated = [s hasPrefix:@"OK"];
             
-            if (!_authenticated) {
-                debug(@"BUMMER, bad password!");
-            }
-            
+            debug(@"_authenticated: %d", _authenticated);
         }
         else if (_authenticated) {
-            
+            NSString *s = [reader stringFromReadData];
+            debug(@"Got server message: %@", s);
         }
         else {
             debug(@"Never got authenticated - why am I getting data?");

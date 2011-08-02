@@ -102,8 +102,7 @@ static NSError* fixStreamError( NSError *error );
 #pragma mark OPENING/CLOSING:
 
 
-- (void)open
-{
+- (void)open {
     FMAssert(_stream);
     FMAssert([_stream streamStatus] == (NSStreamStatus)NSStreamStatusNotOpen);
     
@@ -129,40 +128,38 @@ static NSError* fixStreamError( NSError *error );
 }
 
 
-- (BOOL)close
-{
-    if( ! _shouldClose ) {
+- (BOOL)close {
+    
+    if (!_shouldClose) {
         _shouldClose = YES;
         debug(@"Request to close %@",self);
     }
-    if( self.isBusy ) {
+    
+    if ([self isBusy]) {
         return NO;
-    } else {
+    }
+    else {
         [[self retain] autorelease];        // don't let myself be dealloced in the midst of this
-        [_conn _streamCanClose: self];
+        [_conn _streamCanClose:self];
         return YES;
     }
 }
 
-- (void)_unclose
-{
+- (void)_unclose {
     _shouldClose = NO;
 }
 
 
-- (BOOL)isOpen
-{
-    NSStreamStatus status = _stream.streamStatus;
-    return status >= NSStreamStatusOpen && status < NSStreamStatusAtEnd;
+- (BOOL)isOpen {
+    NSStreamStatus status = [_stream streamStatus];
+    return (status >= NSStreamStatusOpen && status < NSStreamStatusAtEnd);
 }
 
-- (BOOL)isBusy
-{
+- (BOOL)isBusy {
     return NO;  // abstract
 }
 
-- (BOOL)isActive
-{
+- (BOOL)isActive {
     return !_shouldClose || self.isBusy;
 }
 
@@ -214,20 +211,18 @@ static NSError* fixStreamError( NSError *error );
             break;
             
         case NSStreamEventHasBytesAvailable:
-            debug(@"Bytes!");
             if (![_conn _streamPeerCertAvailable:self]) {
                 return;
             }
-            debug(@"going to read!");
+            
             [self _canRead];
             break;
             
         case NSStreamEventHasSpaceAvailable:
-            if( ! [_conn _streamPeerCertAvailable: self] ) {
+            if (![_conn _streamPeerCertAvailable: self]) {
                 return;
             }
             
-            debug(@"%@ can write",self);
             [self _canWrite];
             break;
             
