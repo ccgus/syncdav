@@ -42,7 +42,7 @@ unichar ISO8601DefaultTimeSeparatorCharacter = DEFAULT_TIME_SEPARATOR;
 	}
 	return self;
 }
-- (void) dealloc {
+- (void)dealloc {
 	[defaultTimeZone release];
 	[super dealloc];
 }

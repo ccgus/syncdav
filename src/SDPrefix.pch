@@ -12,6 +12,7 @@
 #define debug NSLog
 
 #define SDAssert assert
+#define FMAssert assert
 
 #define FMRelease(var) { [var release]; var = 0x00; } 
 

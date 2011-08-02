@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "SDManager.h"
 
+
 @interface SDAppDelegate : NSObject <NSApplicationDelegate> {
     NSWindow *window;
     
@@ -34,5 +35,7 @@
 
 - (void)syncAction:(id)sender;
 - (void)chooseLocalFolderAction:(id)sender;
+
+- (void)sdDebugAction:(id)sender;
 
 @end

@@ -110,7 +110,7 @@
     return [self password];
 }
 
-- (void) addGenericPassword:(NSString*)thePassword {
+- (void)addGenericPassword:(NSString*)thePassword {
    
    if (!thePassword) {
        return;
@@ -160,7 +160,7 @@
     }
 }
 
-- (void) deletePassword {
+- (void)deletePassword {
     // can we even find a password? (and load up skItem)
     if ([self genericPassword]) {
         OSStatus kcStatus = SecKeychainItemDelete(skItem);

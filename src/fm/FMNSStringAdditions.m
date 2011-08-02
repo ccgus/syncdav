@@ -10,7 +10,7 @@
 
 @implementation NSString (FMNSStringAdditions)
 
-- (BOOL) containsCharacter:(char)c; {
+- (BOOL)containsCharacter:(char)c; {
     
     int len = [self length];
     const char *word = [self UTF8String];
@@ -29,7 +29,7 @@
     return NO;
 }
 
-- (BOOL) containsUnichar:(unichar)c {
+- (BOOL)containsUnichar:(unichar)c {
     
     int len = [self length];
     int i = 0;
@@ -46,7 +46,7 @@
     return NO;
 }
 
-- (BOOL) hasSuffixFromArray:(NSArray*)ar; {
+- (BOOL)hasSuffixFromArray:(NSArray*)ar; {
     
     NSEnumerator *enumerator = [ar objectEnumerator];
     id object;
@@ -543,18 +543,18 @@
 
 @implementation NSMutableString (FMNSMutableStringAdditions)
 
-- (void) normalizeStringEndings {
+- (void)normalizeStringEndings {
     [self replaceOccurrencesOfString:@"\r\n" withString:@"\n" options:0 range:NSMakeRange(0, [self length])];
     [self replaceOccurrencesOfString:@"\r"   withString:@"\n" options:0 range:NSMakeRange(0, [self length])];
 }
 
-- (void) normalizeStringEndingsInRange:(NSRange)r {
+- (void)normalizeStringEndingsInRange:(NSRange)r {
     [self replaceOccurrencesOfString:@"\r\n" withString:@"\n" options:0 range:r];
     [self replaceOccurrencesOfString:@"\r"   withString:@"\n" options:0 range:r];
 }
 
 
-- (void) replace:(NSString*)searchingFor with:(NSString*)replaceWith {
+- (void)replace:(NSString*)searchingFor with:(NSString*)replaceWith {
     [self replaceOccurrencesOfString:searchingFor
                           withString:replaceWith
                              options:0

@@ -28,9 +28,9 @@
 - (void)setPassword:(NSString *)newPassword;
 
 - (NSString*) genericPassword;
-- (void) addGenericPassword:(NSString*)thePassword;
+- (void)addGenericPassword:(NSString*)thePassword;
 
-- (void) deletePassword;
+- (void)deletePassword;
 
 + (id) keychainItemWithService:(NSString *)theServiceName forAccount:(NSString*)theAccountName;
 + (id) keychainItemWithService:(NSString *)theServiceName;

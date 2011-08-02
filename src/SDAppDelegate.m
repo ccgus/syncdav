@@ -9,6 +9,7 @@
 #import "SDAppDelegate.h"
 #import "FMKeychainItem.h"
 #import "FMNSStringAdditions.h"
+#import "SDEchoReflector.h"
 
 NSString *SDEncytionPhraseKeychainName = @"%@ SyncDAV Encryption Phrase";
 
@@ -261,6 +262,14 @@ NSString *SDEncytionPhraseKeychainName = @"%@ SyncDAV Encryption Phrase";
         }
         
     }];
+}
+
+- (void)sdDebugAction:(id)sender {
+    
+    SDEchoReflector *ref = [SDEchoReflector reflectorWithHostname:@"localhost" port:7000 password:@"password" manager:_manager];
+    
+    [ref retain];
+    [ref connect];
 }
 
 @end

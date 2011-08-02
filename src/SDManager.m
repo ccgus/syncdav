@@ -36,6 +36,7 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
 @synthesize authenticated=_authenticated;
 @synthesize conflictBehavior=_conflictBehavior;
 @synthesize encryptPhrase=_encryptPhrase;
+@synthesize reflector = _reflector;
 
 
 + (id)managerWithLocalURL:(NSURL*)localU remoteURL:(NSURL*)remoteU username:(NSString *)uname password:(NSString*)pass {
@@ -77,7 +78,7 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
     FMRelease(_waitingQueue);
     FMRelease(_activeQueue);
     FMRelease(_encryptPhrase);
-    //FMRelease(_downloadQueBlockHolder);
+    FMRelease(_reflector);
     
     [super dealloc];
 }
@@ -1015,8 +1016,9 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
             authBlock(err);
         }
     }];
-    
-    
+}
+
+- (void)reflector:(id<SDReflector>)relector sawURLUpdated:(NSURL*)updatedURL {
     
 }
 

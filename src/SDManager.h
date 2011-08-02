@@ -27,6 +27,8 @@
 #import <Cocoa/Cocoa.h>
 #import "FMDatabase.h"
 
+@protocol SDReflector;
+
 enum {
     SDOnConflictDiscardLocal = 0,
     SDOnConflictDiscardServer,
@@ -64,6 +66,8 @@ typedef NSUInteger SDConflictOptions;
     
     NSMutableArray      *_waitingQueue;
     NSMutableArray      *_activeQueue;
+    
+    id<SDReflector>     _reflector;
 }
 
 
@@ -77,7 +81,7 @@ typedef NSUInteger SDConflictOptions;
 @property (assign) BOOL authenticated;
 @property (assign) NSUInteger conflictBehavior;
 @property (retain) NSString *encryptPhrase;
-
+@property (retain) id<SDReflector> reflector;
 
 
 + (id)managerWithLocalURL:(NSURL*)localU remoteURL:(NSURL*)remoteU username:(NSString *)uname password:(NSString*)pass;
@@ -87,5 +91,13 @@ typedef NSUInteger SDConflictOptions;
 - (void)sync;
 - (void)syncWithFinishBlock:(void (^)(NSError *))block;
 - (void)authenticateWithFinishBlock:(void (^)(NSError *))block;
+- (void)reflector:(id<SDReflector>)relector sawURLUpdated:(NSURL*)updatedURL;
+
+@end
+
+
+@protocol SDReflector <NSObject>
+
+- (void)fileWasPUT:(NSString*)filePath;
 
 @end

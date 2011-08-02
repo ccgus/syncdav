@@ -36,10 +36,10 @@
 
 - (unsigned int) hexValue;
 
-- (BOOL) hasSuffixFromArray:(NSArray*)ar;
+- (BOOL)hasSuffixFromArray:(NSArray*)ar;
 
-- (BOOL) containsCharacter:(char)c;
-- (BOOL) containsUnichar:(unichar)c;
+- (BOOL)containsCharacter:(char)c;
+- (BOOL)containsUnichar:(unichar)c;
 
 
 - (NSString*) fmlower;
@@ -52,7 +52,7 @@
 @end
 
 @interface NSMutableString (FMNSMutableStringAdditions) 
-- (void) normalizeStringEndings;
-- (void) normalizeStringEndingsInRange:(NSRange)r;
-- (void) replace:(NSString*)searchingFor with:(NSString*)replaceWith;
+- (void)normalizeStringEndings;
+- (void)normalizeStringEndingsInRange:(NSRange)r;
+- (void)replace:(NSString*)searchingFor with:(NSString*)replaceWith;
 @end

@@ -24,6 +24,13 @@
 		CC48DA52138DE1E600275154 /* SDUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = CC48DA51138DE1E600275154 /* SDUtils.m */; };
 		CC5B6864138C9EA700E21363 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5B6862138C9EA700E21363 /* Security.framework */; };
 		CC5B6865138C9EA700E21363 /* SecurityInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5B6863138C9EA700E21363 /* SecurityInterface.framework */; };
+		CC62D3FD13E76E2D00379B24 /* FMIPAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = CC62D3F013E76E2D00379B24 /* FMIPAddress.m */; };
+		CC62D3FE13E76E2D00379B24 /* FMTCPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = CC62D3F313E76E2D00379B24 /* FMTCPConnection.m */; };
+		CC62D40113E76E2D00379B24 /* FMTCPListener.m in Sources */ = {isa = PBXBuildFile; fileRef = CC62D3F813E76E2D00379B24 /* FMTCPListener.m */; };
+		CC62D40213E76E2D00379B24 /* FMTCPStream.m in Sources */ = {isa = PBXBuildFile; fileRef = CC62D3FA13E76E2D00379B24 /* FMTCPStream.m */; };
+		CC62D40313E76E2D00379B24 /* FMTCPWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = CC62D3FC13E76E2D00379B24 /* FMTCPWriter.m */; };
+		CC62D4AF13E7767B00379B24 /* SDEchoReflector.m in Sources */ = {isa = PBXBuildFile; fileRef = CC62D4AE13E7767B00379B24 /* SDEchoReflector.m */; };
+		CC62D51713E77ECB00379B24 /* FMTCPEndpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = CC62D51613E77ECB00379B24 /* FMTCPEndpoint.m */; };
 		CC6CCF26138ECE9E00ED45DC /* JSTalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC6CCF25138ECE9E00ED45DC /* JSTalk.framework */; };
 		CC6CCF2B138ECEB200ED45DC /* JSTalk.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = CC6CCF25138ECE9E00ED45DC /* JSTalk.framework */; };
 		CC6CCFC6138ECEE700ED45DC /* SDApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6CCFC5138ECEE700ED45DC /* SDApplication.m */; };
@@ -85,6 +92,21 @@
 		CC48DA51138DE1E600275154 /* SDUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDUtils.m; path = src/SDUtils.m; sourceTree = "<group>"; };
 		CC5B6862138C9EA700E21363 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
 		CC5B6863138C9EA700E21363 /* SecurityInterface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SecurityInterface.framework; path = /System/Library/Frameworks/SecurityInterface.framework; sourceTree = "<absolute>"; };
+		CC62D3EF13E76E2D00379B24 /* FMIPAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMIPAddress.h; path = src/fmtcpconnnection/FMIPAddress.h; sourceTree = "<group>"; };
+		CC62D3F013E76E2D00379B24 /* FMIPAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMIPAddress.m; path = src/fmtcpconnnection/FMIPAddress.m; sourceTree = "<group>"; };
+		CC62D3F113E76E2D00379B24 /* FMTCP_Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMTCP_Internal.h; path = src/fmtcpconnnection/FMTCP_Internal.h; sourceTree = "<group>"; };
+		CC62D3F213E76E2D00379B24 /* FMTCPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMTCPConnection.h; path = src/fmtcpconnnection/FMTCPConnection.h; sourceTree = "<group>"; };
+		CC62D3F313E76E2D00379B24 /* FMTCPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMTCPConnection.m; path = src/fmtcpconnnection/FMTCPConnection.m; sourceTree = "<group>"; };
+		CC62D3F713E76E2D00379B24 /* FMTCPListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMTCPListener.h; path = src/fmtcpconnnection/FMTCPListener.h; sourceTree = "<group>"; };
+		CC62D3F813E76E2D00379B24 /* FMTCPListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMTCPListener.m; path = src/fmtcpconnnection/FMTCPListener.m; sourceTree = "<group>"; };
+		CC62D3F913E76E2D00379B24 /* FMTCPStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMTCPStream.h; path = src/fmtcpconnnection/FMTCPStream.h; sourceTree = "<group>"; };
+		CC62D3FA13E76E2D00379B24 /* FMTCPStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMTCPStream.m; path = src/fmtcpconnnection/FMTCPStream.m; sourceTree = "<group>"; };
+		CC62D3FB13E76E2D00379B24 /* FMTCPWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMTCPWriter.h; path = src/fmtcpconnnection/FMTCPWriter.h; sourceTree = "<group>"; };
+		CC62D3FC13E76E2D00379B24 /* FMTCPWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMTCPWriter.m; path = src/fmtcpconnnection/FMTCPWriter.m; sourceTree = "<group>"; };
+		CC62D4AD13E7767B00379B24 /* SDEchoReflector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDEchoReflector.h; path = src/SDEchoReflector.h; sourceTree = "<group>"; };
+		CC62D4AE13E7767B00379B24 /* SDEchoReflector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDEchoReflector.m; path = src/SDEchoReflector.m; sourceTree = "<group>"; };
+		CC62D51513E77ECB00379B24 /* FMTCPEndpoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMTCPEndpoint.h; path = src/fmtcpconnnection/FMTCPEndpoint.h; sourceTree = "<group>"; };
+		CC62D51613E77ECB00379B24 /* FMTCPEndpoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMTCPEndpoint.m; path = src/fmtcpconnnection/FMTCPEndpoint.m; sourceTree = "<group>"; };
 		CC6CCF25138ECE9E00ED45DC /* JSTalk.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JSTalk.framework; path = lib/JSTalk.framework; sourceTree = "<group>"; };
 		CC6CCFC4138ECEE700ED45DC /* SDApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDApplication.h; path = src/SDApplication.h; sourceTree = "<group>"; };
 		CC6CCFC5138ECEE700ED45DC /* SDApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDApplication.m; path = src/SDApplication.m; sourceTree = "<group>"; };
@@ -129,6 +151,8 @@
 				CC48D857138D989800275154 /* SDManager.m */,
 				CCFC5F8D13918CD10026096B /* SDQueueItem.h */,
 				CCFC5F8E13918CD10026096B /* SDQueueItem.m */,
+				CC62D4AD13E7767B00379B24 /* SDEchoReflector.h */,
+				CC62D4AE13E7767B00379B24 /* SDEchoReflector.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -166,6 +190,7 @@
 		29B97314FDCFA39411CA2CEA /* flysync */ = {
 			isa = PBXGroup;
 			children = (
+				CC62D2BC13E7607000379B24 /* tcp */,
 				CC48D948138DC08B00275154 /* fm */,
 				CC48D86E138D990E00275154 /* db */,
 				CC5B685C138C9E8200E21363 /* WebDAV */,
@@ -246,6 +271,26 @@
 				CC48D850138D988F00275154 /* ISO8601DateFormatter.m */,
 			);
 			name = WebDAV;
+			sourceTree = "<group>";
+		};
+		CC62D2BC13E7607000379B24 /* tcp */ = {
+			isa = PBXGroup;
+			children = (
+				CC62D51513E77ECB00379B24 /* FMTCPEndpoint.h */,
+				CC62D51613E77ECB00379B24 /* FMTCPEndpoint.m */,
+				CC62D3EF13E76E2D00379B24 /* FMIPAddress.h */,
+				CC62D3F013E76E2D00379B24 /* FMIPAddress.m */,
+				CC62D3F113E76E2D00379B24 /* FMTCP_Internal.h */,
+				CC62D3F213E76E2D00379B24 /* FMTCPConnection.h */,
+				CC62D3F313E76E2D00379B24 /* FMTCPConnection.m */,
+				CC62D3F713E76E2D00379B24 /* FMTCPListener.h */,
+				CC62D3F813E76E2D00379B24 /* FMTCPListener.m */,
+				CC62D3F913E76E2D00379B24 /* FMTCPStream.h */,
+				CC62D3FA13E76E2D00379B24 /* FMTCPStream.m */,
+				CC62D3FB13E76E2D00379B24 /* FMTCPWriter.h */,
+				CC62D3FC13E76E2D00379B24 /* FMTCPWriter.m */,
+			);
+			name = tcp;
 			sourceTree = "<group>";
 		};
 		CCA314AF13907AFD00BB8F16 /* images */ = {
@@ -338,6 +383,13 @@
 				CCFC5F8F13918CD10026096B /* SDQueueItem.m in Sources */,
 				CC77B85C1395CE6F004AAAA7 /* SDManager.m in Sources */,
 				CCD8BDB113DA419100A75E39 /* FMAESDataAdditions.m in Sources */,
+				CC62D3FD13E76E2D00379B24 /* FMIPAddress.m in Sources */,
+				CC62D3FE13E76E2D00379B24 /* FMTCPConnection.m in Sources */,
+				CC62D40113E76E2D00379B24 /* FMTCPListener.m in Sources */,
+				CC62D40213E76E2D00379B24 /* FMTCPStream.m in Sources */,
+				CC62D40313E76E2D00379B24 /* FMTCPWriter.m in Sources */,
+				CC62D4AF13E7767B00379B24 /* SDEchoReflector.m in Sources */,
+				CC62D51713E77ECB00379B24 /* FMTCPEndpoint.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -410,13 +462,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CC = /opt/bin/clang;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx10.7;
 			};
 			name = Debug;
 		};
