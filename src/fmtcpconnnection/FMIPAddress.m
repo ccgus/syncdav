@@ -17,7 +17,7 @@
 
 
 @implementation FMIPAddress
-
+@synthesize ipv4=_ipv4, port=_port;
 
 + (UInt32) IPv4FromDottedQuadString: (NSString*)str
 {
@@ -142,7 +142,7 @@
 }
 
 
-@synthesize ipv4=_ipv4, port=_port;
+
 
 - (BOOL)isEqual: (FMIPAddress*)addr
 {
@@ -350,6 +350,7 @@ static const struct {UInt32 mask, value;} const kPrivateRanges[] = {
 
 @implementation FMRecentAddress
 
+@synthesize lastSuccess=_lastSuccess, successes=_successes;
 
 - (id) initWithIPAddress: (FMIPAddress*)addr
 {
@@ -357,7 +358,7 @@ static const struct {UInt32 mask, value;} const kPrivateRanges[] = {
 }
 
 
-@synthesize lastSuccess=_lastSuccess, successes=_successes;
+
 
 - (BOOL)noteSuccess
 {

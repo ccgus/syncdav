@@ -43,6 +43,15 @@ static void FMTCPListenerAcceptCallBack(CFSocketRef socket, CFSocketCallBackType
 
 @implementation FMTCPListener
 
+@synthesize port=_port;
+@synthesize useIPv6=_useIPv6;
+@synthesize bonjourServiceType=_bonjourServiceType;
+@synthesize bonjourServiceOptions=_bonjourServiceOptions;
+@synthesize bonjourPublished=_bonjourPublished;
+@synthesize bonjourError=_bonjourError;
+@synthesize bonjourService=_netService;
+@synthesize pickAvailablePort=_pickAvailablePort;
+@synthesize connectionClass = _connectionClass;
 
 - (id)init {
     return [self initWithPort: 0];
@@ -67,11 +76,6 @@ static void FMTCPListenerAcceptCallBack(CFSocketRef socket, CFSocketCallBackType
 }
 
 
-@synthesize port=_port, useIPv6=_useIPv6,
-            bonjourServiceType=_bonjourServiceType, bonjourServiceOptions=_bonjourServiceOptions,
-            bonjourPublished=_bonjourPublished, bonjourError=_bonjourError,
-            bonjourService=_netService,
-            pickAvailablePort=_pickAvailablePort;
 
 
 - (id<FMTCPListenerDelegate>) delegate                      {return _delegate;}
@@ -221,7 +225,7 @@ static CFSocketRef closeSocket( CFSocketRef socket ) {
 #pragma mark ACCEPTING CONNECTIONS:
 
 
-@synthesize connectionClass = _connectionClass;
+
 
 
 - (BOOL)acceptConnection: (CFSocketNativeHandle)socket

@@ -32,6 +32,12 @@ unichar ISO8601DefaultTimeSeparatorCharacter = DEFAULT_TIME_SEPARATOR;
 @end
 
 @implementation ISO8601DateFormatter
+@synthesize defaultTimeZone;
+@synthesize parsesStrictly;
+@synthesize format;
+@synthesize includeTime;
+@synthesize timeSeparator;
+
 
 - (id) init {
 	if ((self = [super init])) {
@@ -47,13 +53,8 @@ unichar ISO8601DefaultTimeSeparatorCharacter = DEFAULT_TIME_SEPARATOR;
 	[super dealloc];
 }
 
-@synthesize defaultTimeZone;
-
-//The following properties are only here because GCC doesn't like @synthesize in category implementations.
 
 #pragma mark Parsing
-
-@synthesize parsesStrictly;
 
 static unsigned read_segment(const unsigned char *str, const unsigned char **next, unsigned *out_num_digits);
 static unsigned read_segment_4digits(const unsigned char *str, const unsigned char **next, unsigned *out_num_digits);
@@ -594,9 +595,6 @@ static BOOL is_leap_year(unsigned year);
 
 #pragma mark Unparsing
 
-@synthesize format;
-@synthesize includeTime;
-@synthesize timeSeparator;
 
 - (NSString *) replaceColonsInString:(NSString *)timeFormat withTimeSeparator:(unichar)timeSep {
 	if (timeSep != ':') {
