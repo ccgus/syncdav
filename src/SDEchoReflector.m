@@ -9,6 +9,7 @@
 #import "SDEchoReflector.h"
 #import "FMTCPStream.h"
 #import "FMTCPWriter.h"
+#import "FMNSStringAdditions.h"
 
 @implementation SDEchoReflector
 
@@ -40,8 +41,8 @@
     
     _connectionState = SDEchoReflectorConnectingState;
     
-    FMIPAddress *addr     = [FMIPAddress addressWithHostname:@"localhost" port:7000];
-    FMTCPConnection *conn = [[FMTCPConnection alloc] initToAddress:addr];
+    FMIPAddress *addr   = [FMIPAddress addressWithHostname:@"localhost" port:7000];
+    _server             = [[FMTCPConnection alloc] initToAddress:addr];
     
     NSMutableDictionary *sslProps = [NSMutableDictionary dictionary];
     
@@ -49,20 +50,30 @@
     [sslProps setObject:[NSNull null] forKey:(id)kCFStreamSSLPeerName];
     [sslProps setObject:NSStreamSocketSecurityLevelNegotiatedSSL forKey:(id)kCFStreamSSLLevel];
     
-    [conn setSSLProperties:sslProps];
+    [_server setSSLProperties:sslProps];
     
-    [conn setDelegate:self];
+    [_server setDelegate:self];
     
-    [conn open];
-    
-}
-
-
-
-- (void)fileWasPUT:(NSString*)filePath {
+    [_server open];
     
 }
 
+
+
+- (void)informFilePUT:(NSString*)relativeFilePath localHash:(NSString*)hash {
+    
+    if (_authenticated) {
+         [[_server writer] writeUTF8StringLine:[NSString stringWithFormat:@"UPDATE %@ %@", hash, relativeFilePath]];
+    }
+    
+}
+
+- (void)informFileDELETE:(NSString*)relativeFilePath {
+    
+    if (_authenticated) {
+        [[_server writer] writeUTF8StringLine:[NSString stringWithFormat:@"DELETE %@", relativeFilePath]];
+    }
+}
 
 - (void)connectionDidOpen:(FMTCPConnection*)connection {
     
@@ -72,21 +83,33 @@
         
         if (!_authenticated && _connectionState == SDEchoReflectorAuthenticatingState) {
             NSString *s = [reader stringFromReadData];
-            _authenticated = [s hasPrefix:@"OK"];
+            _authenticated = [s hasPrefix:@"OKAUTH"];
             
+            debug(@"An important message from our server: '%@'", [s trim]);
             debug(@"_authenticated: %d", _authenticated);
         }
         else if (_authenticated) {
             NSString *s = [reader stringFromReadData];
             debug(@"Got server message: %@", s);
+            
+            if ([s hasPrefix:@"UPDATE"]) {
+                
+                #pragma message "FIXME: make sure it's big enough, and check ranges"
+                
+                NSString *junk = [[s trim] substringFromIndex:7];
+                debug(@"junk: '%@'", junk);
+                NSInteger idx = [junk rangeOfString:@" "].location;
+                
+                NSString *hash = [junk substringToIndex:idx];
+                NSString *path = [junk substringFromIndex:idx + 1];
+                
+                [_manager reflector:self sawURIUpdate:path fileHash:hash];
+            }
+            
         }
         else {
             debug(@"Never got authenticated - why am I getting data?");
         }
-        
-        
-        //[[connection writer] writeUTF8StringLine:@"Hi"];
-        
     }];
     
     _connectionState = SDEchoReflectorAuthenticatingState;

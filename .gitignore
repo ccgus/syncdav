@@ -3,3 +3,6 @@ gus.pbxuser
 contents.xcworkspacedata
 UserInterfaceState.xcuserstate
 .DS_Store
+reflector/certificate.pem
+reflector/certrequest.csr
+reflector/privatekey.pem

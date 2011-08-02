@@ -21,6 +21,8 @@ typedef enum {
     NSString *_password;
     int       _port;
     
+    FMTCPConnection *_server;
+    
     __weak SDManager *_manager;
     
     BOOL _authenticated;

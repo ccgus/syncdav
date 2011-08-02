@@ -12,12 +12,16 @@
  1) Check for local deletes by peeking the the .catalog for what is no longer here.
     Tell the server to delete those files.
  
- 2) Recursively look through the webdav folders, looking for new files and changed etags.
+ 2) Look through the server / webdav folders, looking for new files and changed etags.
     Does it have a different etag, or is it new?  Add to the download queue.
 
  3) Once the files have all downloaded (the queue is empty), then delete any local files that are no longer on the server.
  
  4) Finally push up any new and changed files (based on comparing its md5).
+
+
+Create a UUID when you start the server scan.  This will be the "check id".  All catalog updates for the table will insert this identifier as well.  Then we can do a select where update id != our most recent one- these are the files not on the server.   Actually- this won't work anymore if we just update single folders…
+
 
 */
 
@@ -50,13 +54,12 @@ typedef NSUInteger SDConflictOptions;
     FSEventStreamRef    _eventsStreamRef;
     
     BOOL                _stopping;
-    BOOL                _suppressReloads;
+    //BOOL                _suppressReloads;
     BOOL                _listing;
     BOOL                _authenticated;
     
-    NSMutableArray      *_pathsToScanAfterSupressionLifts;
+    NSMutableArray      *_urlsToScanAfterSupressionLifts;
     
-    NSDate              *_lastScanDate;
     
     NSString            *_currentSyncUUID;
     
@@ -75,29 +78,30 @@ typedef NSUInteger SDConflictOptions;
 @property (retain) NSURL *remoteURL;
 @property (retain) NSString *username;
 @property (retain) NSString *password;
-@property (assign) BOOL suppressReloads;
-@property (retain) NSDate *lastScanDate;
+//@property (assign) BOOL suppressReloads;
 @property (retain) NSMutableArray *downloadQue;
 @property (assign) BOOL authenticated;
 @property (assign) NSUInteger conflictBehavior;
 @property (retain) NSString *encryptPhrase;
 @property (retain) id<SDReflector> reflector;
 
-
 + (id)managerWithLocalURL:(NSURL*)localU remoteURL:(NSURL*)remoteU username:(NSString *)uname password:(NSString*)pass;
 
-- (void)start;
 - (void)stop;
-- (void)sync;
-- (void)syncWithFinishBlock:(void (^)(NSError *))block;
+
+- (void)fullSyncWithFinishBlock:(void (^)(NSError *))block;
+- (void)syncLocalURLs:(NSArray*)lURLs recursively:(BOOL)recursively withFinishBlock:(void (^)(NSError *))block;
 - (void)authenticateWithFinishBlock:(void (^)(NSError *))block;
-- (void)reflector:(id<SDReflector>)relector sawURLUpdated:(NSURL*)updatedURL;
+
+- (void)reflector:(id<SDReflector>)relector sawURIUpdate:(NSString*)uri fileHash:(NSString*)serverFileHash;
+- (void)reflector:(id<SDReflector>)relector sawURIDelete:(NSString*)uri;
 
 @end
 
 
 @protocol SDReflector <NSObject>
 
-- (void)fileWasPUT:(NSString*)filePath;
+- (void)informFilePUT:(NSString*)relativeFilePath localHash:(NSString*)localHash;
+- (void)informFileDELETE:(NSString*)relativeFilePath;
 
 @end

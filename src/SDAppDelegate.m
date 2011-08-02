@@ -167,8 +167,6 @@ NSString *SDEncytionPhraseKeychainName = @"%@ SyncDAV Encryption Phrase";
     
     NSString *encPhrase = [phraseKeychain genericPassword];
     
-    debug(@"[encryptionPhraseTextField stringValue]: '%@'", [encryptionPhraseTextField stringValue]);
-    
     if (!encPhrase && [[[encryptionPhraseTextField stringValue] trim] length]) {
         debug(@"Adding %@ to the keychain", encPhrase);
         [phraseKeychain addGenericPassword:[encryptionPhraseTextField stringValue]];
@@ -195,17 +193,28 @@ NSString *SDEncytionPhraseKeychainName = @"%@ SyncDAV Encryption Phrase";
     [statusTextField setStringValue:@"Authenticating…"];
     [syncButton setEnabled:NO];
     
-    
     [_manager authenticateWithFinishBlock:^(NSError *err) {
+        
+        SDEchoReflector *ref = [SDEchoReflector reflectorWithHostname:@"zero.local" port:7000 password:@"password" manager:_manager];
+        
+        #pragma message "FIXME: check for an error here."
+        [ref connect];
+        
+        [_manager setReflector:ref];
+        
         
         [syncButton setEnabled:YES];
         [progressSpinner stopAnimation:nil];
         [statusTextField setStringValue:@""];
         
         if ([_manager authenticated]) {
-            [_manager start];
-            [syncButton setTitle:@"Sync"];
-            [self startPollingTimer];
+            [statusTextField setStringValue:@"Performing full sync"];
+            [progressSpinner startAnimation:nil];
+            [_manager fullSyncWithFinishBlock:^(NSError *arg1) {
+                [syncButton setTitle:@"Sync"];
+                [progressSpinner stopAnimation:nil];
+                [self startPollingTimer];
+            }];
         }
         else {
             NSBeep();
@@ -233,7 +242,7 @@ NSString *SDEncytionPhraseKeychainName = @"%@ SyncDAV Encryption Phrase";
         [progressSpinner startAnimation:nil];
         [statusTextField setStringValue:@"Syncing…"];
         
-        [_manager syncWithFinishBlock:^(NSError *arg1) {
+        [_manager fullSyncWithFinishBlock:^(NSError *arg1) {
             [progressSpinner stopAnimation:nil];
             [statusTextField setStringValue:@""];
         }];
@@ -266,10 +275,6 @@ NSString *SDEncytionPhraseKeychainName = @"%@ SyncDAV Encryption Phrase";
 
 - (void)sdDebugAction:(id)sender {
     
-    SDEchoReflector *ref = [SDEchoReflector reflectorWithHostname:@"localhost" port:7000 password:@"password" manager:_manager];
-    
-    [ref retain];
-    [ref connect];
 }
 
 @end
