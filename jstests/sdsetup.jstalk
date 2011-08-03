@@ -134,3 +134,8 @@ function SDSystem(cmd) {
     [[jstalk jsController] system:cmd];
 }
 
+function SDFinish(manager) {
+    [manager autorelease];
+    print("Done with " + SDScriptName);
+}
+

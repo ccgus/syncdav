@@ -70,6 +70,8 @@ typedef NSUInteger SDConflictOptions;
     NSMutableArray      *_waitingQueue;
     NSMutableArray      *_activeQueue;
     
+    NSArray             *_activeSyncingLocalURLs;
+    
     id<SDReflector>     _reflector;
 }
 
@@ -78,7 +80,6 @@ typedef NSUInteger SDConflictOptions;
 @property (retain) NSURL *remoteURL;
 @property (retain) NSString *username;
 @property (retain) NSString *password;
-//@property (assign) BOOL suppressReloads;
 @property (retain) NSMutableArray *downloadQue;
 @property (assign) BOOL authenticated;
 @property (assign) NSUInteger conflictBehavior;
@@ -90,7 +91,7 @@ typedef NSUInteger SDConflictOptions;
 - (void)stop;
 
 - (void)fullSyncWithFinishBlock:(void (^)(NSError *))block;
-- (void)syncLocalURLs:(NSArray*)lURLs recursively:(BOOL)recursively withFinishBlock:(void (^)(NSError *))block;
+- (void)syncLocalURLs:(NSArray*)lURLs withFinishBlock:(void (^)(NSError *))block;
 - (void)authenticateWithFinishBlock:(void (^)(NSError *))block;
 
 - (void)reflector:(id<SDReflector>)relector sawURIUpdate:(NSString*)uri fileHash:(NSString*)serverFileHash;

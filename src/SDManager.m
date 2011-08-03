@@ -18,6 +18,9 @@
 - (BOOL)shouldUploadItemAtURL:(NSURL*)aLocalURL;
 - (void)cleanupServerDeletesIfDoneDownloading;
 - (void)putChangedFilesFromLocalURL:(NSURL*)lURL;
+
+@property (retain) NSArray *activeSyncingLocalURLs;
+
 @end
 
 static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *manager, int numEvents, NSArray *paths, const FSEventStreamEventFlags *eventFlags, const uint64_t *eventIDs)
@@ -33,7 +36,7 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
     }
     
     if ([localURLs count]) {
-        [manager syncLocalURLs:localURLs recursively:NO withFinishBlock:nil];
+        //[manager syncLocalURLs:localURLs withFinishBlock:nil];
     }
 }
 
@@ -47,7 +50,8 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
 @synthesize authenticated=_authenticated;
 @synthesize conflictBehavior=_conflictBehavior;
 @synthesize encryptPhrase=_encryptPhrase;
-@synthesize reflector = _reflector;
+@synthesize reflector=_reflector;
+@synthesize activeSyncingLocalURLs=_activeSyncingLocalURLs;
 
 
 + (id)managerWithLocalURL:(NSURL*)localU remoteURL:(NSURL*)remoteU username:(NSString *)uname password:(NSString*)pass {
@@ -489,6 +493,8 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
             
             BOOL locallyModified = alreadyExists && [self localURLHasChangedSinceLastSync:lurl];
             
+            debug(@"locallyModified: %d", locallyModified);
+            
             // this feels skanky.
             if (locallyModified && _conflictBehavior == SDOnConflictDiscardServer) {
                 //debug(@"WHOA HOLY CARP CONFLICT");
@@ -532,7 +538,10 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
                     // filename (compname's conflicted copy 2011-06-01 (1)).extension
                 }
                 
+                debug(@"adding url to request queue");
                 [self addURLToRequestQueue:itemServerURL requestAction:@selector(get) withFinishBlock:^(FMWebDAVRequest *getRequest) {
+                    
+                    debug(@"got the data!");
                     
                     NSData *writeData = [getRequest responseData];
                     
@@ -620,16 +629,24 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
     
     if (_urlsToScanAfterSupressionLifts) {
         debug(@"Kicking up the dirs that we were asked to scan while we were already in a scan!");
-        [self syncLocalURLs:_urlsToScanAfterSupressionLifts recursively:NO withFinishBlock:nil];
+        [self syncLocalURLs:_urlsToScanAfterSupressionLifts withFinishBlock:nil];
     }
     
 }
 
+- (void)putChangedFilesFromLocalURLs:(NSArray*)lURLs {
+    
+    debug(@"lURLs: '%@'", lURLs);
+    
+    for (NSURL *url in lURLs) {
+        [self putChangedFilesFromLocalURL:url];
+    }
+
+}
+
 - (void)putChangedFilesFromLocalURL:(NSURL*)lURL {
     
-    if (!lURL) {
-        lURL = _localURL;
-    }
+    SDAssert(lURL);
     
     
     debug(@"Entering putChangedFilesFromLocalURL %@", lURL);
@@ -645,6 +662,7 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
     if (!ar) {
         NSLog(@"Error getting subpaths!");
         NSLog(@"%@", err);
+        SDAssert(NO);
     }
     
     for (NSString *path in ar) {
@@ -850,13 +868,34 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
     
     #pragma message "FIXME: this is totally fucked now.  Time to rethink everything.  UGH"
     
-    /*
     NSMutableArray *localDeletes = [NSMutableArray array];
     
-    FMResultSet *rs = [[self catalog] executeQuery:@"select path from sync_catalog where sync_check_uuid <> ?", _currentSyncUUID];
-    while ([rs next]) {
-        [localDeletes addObject:[rs stringForColumnIndex:0]];
+    for (NSURL *lUrl in _activeSyncingLocalURLs) {
+        
+        NSString *relPath = [self relativePathForLocalURL:lUrl];
+        
+        if (![relPath length]) {
+            relPath = @"/";
+        }
+        
+        
+        
+        FMResultSet *rs = [[self catalog] executeQuery:@"select path from sync_catalog where sync_check_uuid <> ? and path like ?", _currentSyncUUID, [relPath stringByAppendingString:@"%"]];
+        while ([rs next]) {
+            
+            NSString *p = [rs stringForColumnIndex:0];
+            
+            NSUInteger alreadyAround = [localDeletes indexOfObjectPassingTest:^(NSString *ePath, NSUInteger idx, BOOL *stop) {
+                return ([ePath isEqualTo:p]);
+            }];
+            
+            if (alreadyAround != NSNotFound) {
+                [localDeletes addObject:p];
+            }
+        }
+        
     }
+    
     
     NSFileManager *fm = [[[NSFileManager alloc] init] autorelease];
     
@@ -875,8 +914,7 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
         [[self catalog] executeUpdate:@"delete from sync_catalog where path = ?", relPath];
     }
     
-    [self putChangedFilesFromLocalURL:nil];
-    */
+    [self putChangedFilesFromLocalURLs:_activeSyncingLocalURLs];
 }
 
 
@@ -887,11 +925,9 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
     }
 }
 
-- (void)getServerChangesAtURLs:(NSArray*)endpointURLs recursively:(BOOL)recursive {
+- (void)getServerChangesAtURLs:(NSArray*)endpointURLs {
     
-    if (![endpointURLs count]) {
-        endpointURLs = [NSArray arrayWithObject:_remoteURL];
-    }
+    SDAssert([endpointURLs count]);
     
     for (NSURL *endpointURL in endpointURLs) {
         
@@ -907,8 +943,12 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
                 
                 [self getServerURLIfNeeded:newURL withPathInfo:pathInfo];
                 
-                if (recursive && ([[pathInfo objectForKey:FMWebDAVContentTypeKey] hasSuffix:@"directory"] || [[pathInfo objectForKey:FMWebDAVURIKey] hasSuffix:@"/"])) {
-                    [self getServerChangesAtURLs:[NSArray arrayWithObject:newURL] recursively:recursive];
+                if (([[pathInfo objectForKey:FMWebDAVContentTypeKey] hasSuffix:@"directory"] || [[pathInfo objectForKey:FMWebDAVURIKey] hasSuffix:@"/"])) {
+                    
+                    // hey gus- check and see if the dir exists locally or not.  And if it doesn't, then add it to the list.
+                    abort();
+                    
+                    [self getServerChangesAtURLs:[NSArray arrayWithObject:newURL]];
                 }
             }
             
@@ -919,19 +959,33 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
     }
 }
 
-- (void)cleanupLocalDeletesAtURLs:(NSArray*)lURLs recursively:(BOOL)recursive {
-    
-    //FIXME: eventually narrow it down with the lURLs argument, which is currently ignored
+- (void)cleanupLocalDeletesAtURLs:(NSArray*)lURLs {
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         NSMutableArray *deletes = [NSMutableArray array];
+        NSMutableArray *getURLs = [NSMutableArray array];
         
         NSFileManager *fm = [[[NSFileManager alloc] init] autorelease];
-        FMResultSet *rs = [[self catalog] executeQuery:@"select path, file_type from sync_catalog order by 1"];
         
-        while ([rs next]) {
-            [deletes addObject:[rs resultDict]];
+        for (NSURL *lUrl in lURLs) {
+            
+            NSString *relativePath = [self relativePathForLocalURL:lUrl];
+            
+            [getURLs addObject:[self serverURLFromRelativePath:relativePath]];
+            
+            FMResultSet *rs = [[self catalog] executeQuery:@"select path, file_type from sync_catalog where path like ? order by 1", [relativePath stringByAppendingString:@"%"]];
+            
+            if ([[self catalog] hadError]) {
+                debug(@"lastErrorMessage: '%@'", [[self catalog] lastErrorMessage]);
+            }
+            
+            SDAssert(![[self catalog] hadError]);
+            SDAssert(rs);
+            
+            while ([rs next]) {
+                [deletes addObject:[rs resultDict]];
+            }
         }
         
         for (NSDictionary *d in deletes) {
@@ -961,7 +1015,7 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self getServerChangesAtURLs:lURLs recursively:recursive];
+            [self getServerChangesAtURLs:getURLs];
         });
     });
     
@@ -974,25 +1028,40 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
 }
 
 - (void)fullSyncWithFinishBlock:(void (^)(NSError *))block {
-    [self syncLocalURLs:nil recursively:YES withFinishBlock:block];
-}
-
-- (void)syncLocalURLs:(NSArray*)lURLs recursively:(BOOL)recursive withFinishBlock:(void (^)(NSError *))finishBlock {
     
-    if (!_eventsStreamRef) {
-        if (![self setupLocalListener]) {
-            debug(@"Could not open local listener!");
-            if (finishBlock) {
-                finishBlock([NSError errorWithDomain:@"local listener fail" code:0 userInfo:nil]);
-            }
+    NSMutableArray *allDirectoryURLs = [NSMutableArray arrayWithObject:_localURL];
+    NSFileManager *fm                = [[NSFileManager new] autorelease];
+    
+    for (NSString *path in [fm subpathsOfDirectoryAtPath:[_localURL path] error:nil]) {
+        
+        BOOL isDir;
+        if ([fm fileExistsAtPath:[[_localURL path] stringByAppendingPathComponent:path] isDirectory:&isDir] && isDir) {
             
-            return;
+            NSURL *url = [_localURL URLByAppendingPathComponent:path isDirectory:YES];
+            if ([self shouldUploadItemAtURL:url]) {
+                [allDirectoryURLs addObject:url];
+            }
         }
     }
     
+    [self syncLocalURLs:allDirectoryURLs withFinishBlock:block];
+}
+
+- (void)syncLocalURLs:(NSArray*)lURLs withFinishBlock:(void (^)(NSError *))finishBlock {
+    
+    if (!_eventsStreamRef && ![self setupLocalListener]) {
+        NSLog(@"Could not open local listener!");
+        
+        if (finishBlock) {
+            finishBlock([NSError errorWithDomain:@"local listener fail" code:0 userInfo:nil]);
+        }
+        
+        return;
+    }
+    
     if (!_authenticated) {
-        NSBeep();
         NSLog(@"Need to authenticate first!");
+        
         if (finishBlock) {
             finishBlock([NSError errorWithDomain:@"authenticate fail" code:0 userInfo:nil]);
         }
@@ -1001,7 +1070,6 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
     }
     
     if (_currentSyncUUID) {
-        
         
         for (NSURL *url in lURLs) {
             
@@ -1016,9 +1084,9 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
             
         debug(@"_urlsToScanAfterSupressionLifts: '%@'", _urlsToScanAfterSupressionLifts);
         
-        NSLog(@"Pull already in progress!");
+        NSLog(@"Sync already in progress, adding to queue for later");
         if (finishBlock) {
-            finishBlock([NSError errorWithDomain:@"pull in progress" code:0 userInfo:nil]);
+            finishBlock([NSError errorWithDomain:@"sync in progress" code:0 userInfo:nil]);
         }
         
         return;
@@ -1028,7 +1096,10 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
     
     [self setFinishBlock:finishBlock];
     
-    [self cleanupLocalDeletesAtURLs:lURLs recursively:recursive];
+    [self setActiveSyncingLocalURLs:lURLs];
+    
+    #pragma message "FIXME: why the fuck am I passing along these urls, when I've also got an ivar for them?"
+    [self cleanupLocalDeletesAtURLs:lURLs];
 }
 
 - (void)stop {
