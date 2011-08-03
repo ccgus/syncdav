@@ -13,7 +13,7 @@ runInSD(function() {
     var textURL = [spaceURL URLByAppendingPathComponent:@"hello world.txt"];
     SDPutTextToURL(startText, textURL);
     
-    [m syncWithFinishBlock:[NSApplication new1ArgBlockForJSFunction:function(err) {
+    [m fullSyncWithFinishBlock:[NSApplication new1ArgBlockForJSFunction:function(err) {
         
         // see if we got it.
         var s = SDGetLocalFileText("dir with space/hello world.txt")
@@ -23,7 +23,7 @@ runInSD(function() {
         var newText = @"Hello World - with more text!";
         SDWriteTextToLocalFile(newText, "dir with space/hello world.txt")
         
-        [m syncWithFinishBlock:[NSApplication new1ArgBlockForJSFunction:function(err) {
+        [m fullSyncWithFinishBlock:[NSApplication new1ArgBlockForJSFunction:function(err) {
             
             // get it off the server, make sure it's awesome.
             var sText = SDGetTextFromURL(textURL);
@@ -32,10 +32,10 @@ runInSD(function() {
             // delete it locally.
             SDSystem("rm -rf '" + [SDLocalURL path] + "/dir with space/hello world.txt'")
             
-            [m syncWithFinishBlock:[NSApplication new1ArgBlockForJSFunction:function(err) {
+            [m fullSyncWithFinishBlock:[NSApplication new1ArgBlockForJSFunction:function(err) {
                 // make sure it isn't on the server anymore.
                 SDAssert(!SDResourceExistsAtURL(textURL), "The text should be deleted from the server! '" + sText + "'")
-                print("Done with " + SDScriptName)
+                SDFinish(m);
             }]];
         }]];
     }]];

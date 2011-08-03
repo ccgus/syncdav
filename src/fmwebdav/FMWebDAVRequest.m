@@ -202,6 +202,8 @@ static NSMutableArray *FMWebDAVRequestTestResponses = nil;
             [self logRequest:req];
             [self logResponse:httpResponse];
             
+            [self setAllHeaderFields:[httpResponse allHeaderFields]];
+            
             _responseStatusCode = [httpResponse statusCode];
         }
         

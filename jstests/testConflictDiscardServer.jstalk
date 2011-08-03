@@ -13,7 +13,7 @@ runInSD(function() {
     var textURL = [SDRemoteURL URLByAppendingPathComponent:@"cj.txt"];
     SDPutTextToURL(startText, textURL);
     
-    [m syncWithFinishBlock:[NSApplication new1ArgBlockForJSFunction:function(err) {
+    [m fullSyncWithFinishBlock:[NSApplication new1ArgBlockForJSFunction:function(err) {
         
         // see if we got it.
         var s = SDGetLocalFileText("cj.txt")
@@ -26,8 +26,8 @@ runInSD(function() {
         // change the text locally.
         var localText = @"locally updated text";
         SDWriteTextToLocalFile(localText, "cj.txt")
-        
-        [m syncWithFinishBlock:[NSApplication new1ArgBlockForJSFunction:function(err) {
+        /*
+        [m fullSyncWithFinishBlock:[NSApplication new1ArgBlockForJSFunction:function(err) {
             
             var sText = SDGetTextFromURL(textURL);
             SDAssert([sText isEqualTo:localText], "Text was not updated! got:\n'" + sText + "'")
@@ -35,9 +35,9 @@ runInSD(function() {
             var lText = SDGetLocalFileText("cj.txt")
             SDAssert([lText isEqualTo:localText], "Local was not updated- got '" + s + "'")
             
-            print("Done with " + SDScriptName);
+            SDFinish(m);
         }]];
-    
+    */
     }]];
 });
 

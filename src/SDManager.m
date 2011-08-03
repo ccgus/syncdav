@@ -16,8 +16,8 @@
 
 @interface SDManager ()
 - (BOOL)shouldUploadItemAtURL:(NSURL*)aLocalURL;
-- (void)cleanupServerDeletesIfDoneDownloading;
 - (void)putChangedFilesFromLocalURL:(NSURL*)lURL;
+- (NSURL*)localPathURLFromServerURI:(NSString*)uri;
 
 @property (retain) NSArray *activeSyncingLocalURLs;
 
@@ -372,6 +372,13 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
     }
 }
 
+- (NSURL*)localPathURLFromServerURL:(NSURL*)surl {
+    
+    NSURL *r = [self localPathURLFromServerURI:[surl path]];
+    
+    return r;
+}
+
 - (NSURL*)localPathURLFromServerURI:(NSString*)uri {
     
     NSString *baseURI = [_remoteURL path];
@@ -480,6 +487,34 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
     
     if (shouldDownload) {
         
+        NSDate *creDate   = [pathInfo objectForKey:FMWebDAVCreationDateKey];
+        NSDate *modDate   = [pathInfo objectForKey:FMWebDAVModificationDateKey];
+        
+        modDate = (!modDate) ? [NSDate date] : modDate;
+        
+        if (!creDate && isServerDir) {
+            // We're on MobileMe, aren't we?
+            creDate = modDate;
+        }
+        
+        SDAssert(creDate);
+        
+        if (!alreadyExists) {
+            [[self catalog] executeUpdate:@"insert into sync_catalog (path, file_type, etag, created_time, modified_time, sync_check_uuid) values (?, ?, ?, ?, ?, ?)", relPath, isServerDir ? @"fold" : @"file", etag, creDate, modDate, _currentSyncUUID];
+            
+            SDAssert(![[self catalog] hadError]);
+            
+        }
+        else {
+            [[self catalog] executeUpdate:@"update sync_catalog set sync_check_uuid = ? where path = ?", _currentSyncUUID, relPath];
+        }
+        
+        
+        
+        
+        
+        
+        
         if (isServerDir) {
             NSError *err;
             
@@ -539,8 +574,12 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
                 }
                 
                 debug(@"adding url to request queue");
-                [self addURLToRequestQueue:itemServerURL requestAction:@selector(get) withFinishBlock:^(FMWebDAVRequest *getRequest) {
+                //[self addURLToRequestQueue:itemServerURL requestAction:@selector(get) withFinishBlock:^(FMWebDAVRequest *getRequest) {
+                {    
                     
+                    FMWebDAVRequest *getRequest = [[[FMWebDAVRequest requestToURL:itemServerURL delegate:self] synchronous] get];
+                    SDAssert(![getRequest error]);
+                    SDAssert([getRequest allHeaderFields]);
                     debug(@"got the data!");
                     
                     NSData *writeData = [getRequest responseData];
@@ -587,41 +626,22 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
                         
                         SDAssert([s isEqualToString:md5]);
                     }
-                    
+                }
+                    /*
                     [self removeURLFromActiveQueue:itemServerURL];
                     
-                    [self cleanupServerDeletesIfDoneDownloading];
-                }];
+                }];*/
+                
             }
         }
     }
     
-    NSDate *creDate   = [pathInfo objectForKey:FMWebDAVCreationDateKey];
-    NSDate *modDate   = [pathInfo objectForKey:FMWebDAVModificationDateKey];
-    
-    modDate = (!modDate) ? [NSDate date] : modDate;
-    
-    if (!creDate && isServerDir) {
-        // We're on MobileMe, aren't we?
-        creDate = modDate;
-    }
-    
-    SDAssert(creDate);
-    
-    if (!alreadyExists) {
-        [[self catalog] executeUpdate:@"insert into sync_catalog (path, file_type, etag, created_time, modified_time, sync_check_uuid) values (?, ?, ?, ?, ?, ?)", relPath, isServerDir ? @"fold" : @"file", etag, creDate, modDate, _currentSyncUUID];
-        
-        SDAssert(![[self catalog] hadError]);
-        
-    }
-    else {
-        [[self catalog] executeUpdate:@"update sync_catalog set sync_check_uuid = ? where path = ?", _currentSyncUUID, relPath];
-    }
 }
 
 - (void)finishSyncing {
     debug(@"All done!");
     FMRelease(_currentSyncUUID);
+    FMRelease(_activeSyncingLocalURLs);
     
     if (_finishBlock) {
         _finishBlock(nil);
@@ -635,8 +655,6 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
 }
 
 - (void)putChangedFilesFromLocalURLs:(NSArray*)lURLs {
-    
-    debug(@"lURLs: '%@'", lURLs);
     
     for (NSURL *url in lURLs) {
         [self putChangedFilesFromLocalURL:url];
@@ -656,9 +674,6 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
     NSFileManager *fm          = [[[NSFileManager alloc] init] autorelease];
     NSArray *ar                = [fm contentsOfDirectoryAtPath:[lURL path] error:&err];
     
-    debug(@"ar: '%@'", ar);
-    
-    
     if (!ar) {
         NSLog(@"Error getting subpaths!");
         NSLog(@"%@", err);
@@ -673,14 +688,9 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
         NSString *fullPath = [[lURL path] stringByAppendingPathComponent:path];
         NSURL *fullURL     = [NSURL fileURLWithPath:fullPath];
         
-        debug(@"Checking: '%@'", fullURL);
-        
         if (![self shouldUploadItemAtURL:fullURL]) {
-            debug(@"nope");
             continue;
         }
-        
-        debug(@"yep");
         
         FMResultSet *rs = [[self catalog] executeQuery:@"select etag, md5_when_put from sync_catalog where path = ?", [NSString stringWithFormat:@"/%@", path]];
         while ([rs next]) {
@@ -742,6 +752,8 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
             }
         }
     }
+    
+    debug(@"pushUpInfo: '%@'", pushUpInfo);
     
     for (NSDictionary *dict in pushUpInfo) {
         
@@ -825,18 +837,6 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
                     BOOL worked = [[self catalog] executeUpdate:@"replace into sync_catalog (path, etag, md5_when_put, sync_check_uuid, server_modified_date_string, weak_etag) values (?, ?, ?, ?, ?, ?)", relativePath, headEtag, localMD5, headDate, [NSNumber numberWithBool:headWeakEtag], _currentSyncUUID];
                     
                     SDAssert(worked);
-                    /*
-                    if (exists) {
-                        BOOL res = [[self catalog] executeUpdate:@"update sync_catalog set etag = ?, md5_when_put = ?, sync_check_uuid = ?, server_modified_date_string = ?, weak_etag = ? where path = ?", headEtag, localMD5, _currentSyncUUID, headDate, [NSNumber numberWithBool:headWeakEtag], relativePath];
-                        
-                        SDAssert(res);
-                        SDAssert(![[self catalog] hadError]);
-                    }
-                    else {
-                        BOOL res = [[self catalog] executeUpdate:@"insert into sync_catalog (path, etag, md5_when_put, sync_check_uuid, server_modified_date_string, weak_etag) values (?, ?, ?, ?, ?, ?)", relativePath, headEtag, localMD5, headDate, [NSNumber numberWithBool:headWeakEtag], _currentSyncUUID];
-                        SDAssert(res);
-                    }
-                    */
                 }
                 else {
                     NSLog(@"Bad head on %@", pushToURL);
@@ -864,9 +864,7 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
 
 - (void)cleanupServerDeletes {
     
-    //debug(@"Entering cleanupServerDeletes");
-    
-    #pragma message "FIXME: this is totally fucked now.  Time to rethink everything.  UGH"
+    debug(@"Entering cleanupServerDeletes");
     
     NSMutableArray *localDeletes = [NSMutableArray array];
     
@@ -877,8 +875,6 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
         if (![relPath length]) {
             relPath = @"/";
         }
-        
-        
         
         FMResultSet *rs = [[self catalog] executeQuery:@"select path from sync_catalog where sync_check_uuid <> ? and path like ?", _currentSyncUUID, [relPath stringByAppendingString:@"%"]];
         while ([rs next]) {
@@ -901,7 +897,7 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
     
     for (NSString *relPath in localDeletes) {
         
-        //debug(@"deleting: %@", relPath);
+        debug(@"deleting: %@", relPath);
         
         NSURL *deleteURL = [NSURL fileURLWithPath:[[_localURL path] stringByAppendingString:relPath]];
         
@@ -915,23 +911,23 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
     }
     
     [self putChangedFilesFromLocalURLs:_activeSyncingLocalURLs];
-}
-
-
-- (void)cleanupServerDeletesIfDoneDownloading {
     
-    if ([self queueIsEmpty]) {
-        [self cleanupServerDeletes];
-    }
+    debug(@"Exiting cleanupServerDeletes");
 }
+
 
 - (void)getServerChangesAtURLs:(NSArray*)endpointURLs {
     
+    debug(@"Entering getServerChangesAtURLs");
+    
+    SDAssert([NSThread isMainThread]);
     SDAssert([endpointURLs count]);
     
     for (NSURL *endpointURL in endpointURLs) {
         
         [self addURLToRequestQueue:endpointURL requestAction:@selector(fetchDirectoryListing) withFinishBlock:^(FMWebDAVRequest *dirRequest) {
+            
+            NSFileManager *fm = [[NSFileManager new] autorelease];
             
             if ([dirRequest error]) {
                 NSLog(@"error fetching directory listing: %@", [dirRequest error]);
@@ -945,21 +941,32 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
                 
                 if (([[pathInfo objectForKey:FMWebDAVContentTypeKey] hasSuffix:@"directory"] || [[pathInfo objectForKey:FMWebDAVURIKey] hasSuffix:@"/"])) {
                     
-                    // hey gus- check and see if the dir exists locally or not.  And if it doesn't, then add it to the list.
-                    abort();
+                    NSURL *lURL = [self localPathURLFromServerURL:newURL];
                     
-                    [self getServerChangesAtURLs:[NSArray arrayWithObject:newURL]];
+                    // it's new!
+                    if (![fm fileExistsAtPath:[lURL path]]) {
+                        debug(@"NEW DIR TO PULL! %@", [lURL path]);
+                        abort();
+                        //[self getServerChangesAtURLs:[NSArray arrayWithObject:newURL]];
+                    }
                 }
             }
             
             [self removeURLFromActiveQueue:endpointURL];
             
-            [self cleanupServerDeletesIfDoneDownloading];
+            
+            if ([self queueIsEmpty]) {
+                debug(@"Queue is empty!");
+                [self cleanupServerDeletes];
+            }
         }];
     }
+    
+    
+    debug(@"Exiting getServerChangesAtURLs, waiting queue: %ld active queue: %ld", [_waitingQueue count], [_activeQueue count]);
 }
 
-- (void)cleanupLocalDeletesAtURLs:(NSArray*)lURLs {
+- (void)removeLocalDeletesFromServer {
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
@@ -968,7 +975,7 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
         
         NSFileManager *fm = [[[NSFileManager alloc] init] autorelease];
         
-        for (NSURL *lUrl in lURLs) {
+        for (NSURL *lUrl in _activeSyncingLocalURLs) {
             
             NSString *relativePath = [self relativePathForLocalURL:lUrl];
             
@@ -1070,7 +1077,8 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
     }
     
     if (_currentSyncUUID) {
-        
+        abort(); 
+        /*
         for (NSURL *url in lURLs) {
             
             NSUInteger alreadyAround = [_urlsToScanAfterSupressionLifts indexOfObjectPassingTest:^(NSURL *existingURL, NSUInteger idx, BOOL *stop) {
@@ -1090,16 +1098,20 @@ static void VPDocScannerFSEventsCallback(FSEventStreamRef streamRef, SDManager *
         }
         
         return;
+        */
     }
     
     _currentSyncUUID = [[NSString stringWithUUID] retain];
     
     [self setFinishBlock:finishBlock];
     
+    if (_activeSyncingLocalURLs) {
+        abort();
+    }
+    
     [self setActiveSyncingLocalURLs:lURLs];
     
-    #pragma message "FIXME: why the fuck am I passing along these urls, when I've also got an ivar for them?"
-    [self cleanupLocalDeletesAtURLs:lURLs];
+    [self removeLocalDeletesFromServer];
 }
 
 - (void)stop {

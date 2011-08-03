@@ -136,6 +136,6 @@ function SDSystem(cmd) {
 
 function SDFinish(manager) {
     [manager autorelease];
-    print("Done with " + SDScriptName);
+    print("*** Done with " + SDScriptName);
 }
 
